@@ -1,9 +1,8 @@
 /**
  * Sunday Automated Reminder Script for Secret Santa 2026
  * 
- * Runs automatically every Sunday or whenever triggered by the Admin!
- * Calculates the exact countdown and prepares the reminder roast message:
- * "Don't forget to buy the gift for your Secret Santa member because last year Sathya betrayed Sakthi!"
+ * Runs automatically every Sunday or whenever triggered by Admin Sakthi!
+ * Sends a confidential WhatsApp reminder without revealing who anyone is gifting.
  */
 
 const MEMBERS = [
@@ -29,26 +28,27 @@ function getCountdownDays() {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-function generateRoastMessage(member, daysLeft) {
-  return `🎅 *FAMILY SECRET SANTA 2026 REMINDER* 🎁\n\nHey ${member.name}! Only *${daysLeft} days left* until our New Year Gift Exchange! 🎉\n\n⚠️ *CRITICAL RULE:* Don't forget to buy the gift for your Secret Santa person, because *LAST YEAR SATHYA BETRAYED SAKTHI!* 😭 Do NOT be like Sathya! Keep your gift wrapped and ready!\n\n🔑 Check your portal here:\nhttps://familymemories.vercel.app\n\n— *From Admin Sakthi 📜*`
+function generateReminderMessage(member, daysLeft) {
+  // Never mentions assigned target to protect secrecy from lockscreen notification peeking
+  return `Hey ${member.name}! Just a gentle reminder and the Secret Santa reveal will happen in just ${daysLeft} days, so make a gift ready. Because already Sakthi got betrayed by Sathya, so prepare it on time.\n\nPortal: https://family-memories-inky.vercel.app/`
 }
 
 console.log('='.repeat(65))
-console.log('🎄 SECRET SANTA SUNDAY REMINDER GENERATOR (IST TIME) 🎄')
+console.log('🎄 SECRET SANTA SUNDAY REMINDER GENERATOR 🎄')
 console.log('='.repeat(65))
 
 const days = getCountdownDays()
 console.log(`\n📅 Days remaining until New Year Gift Exchange: ${days} days\n`)
 
 MEMBERS.forEach((m, idx) => {
-  const msg = generateRoastMessage(m, days)
+  const msg = generateReminderMessage(m, days)
   const encodedMsg = encodeURIComponent(msg)
   const waUrl = `https://wa.me/91${m.phone}?text=${encodedMsg}`
   
   console.log(`[${idx + 1}/${MEMBERS.length}] ${m.name} (${m.phone})`)
-  console.log(`👉 1-Click WhatsApp Link: ${waUrl}\n`)
+  console.log(`👉 WhatsApp Link: ${waUrl}\n`)
 })
 
 console.log('='.repeat(65))
-console.log('✨ You can click any link above to message them directly on WhatsApp!')
+console.log('✨ All confidential WhatsApp reminder links generated successfully!')
 console.log('='.repeat(65))
