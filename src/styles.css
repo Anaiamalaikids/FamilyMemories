@@ -2220,11 +2220,11 @@ input:focus, select:focus, textarea:focus {
 }
 
 .roast-text {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 1.25rem;
+  font-family: 'Onest', sans-serif;
+  font-size: 1.1rem;
   line-height: 1.6;
   color: #fff;
-  font-style: italic;
+  font-style: normal;
   margin-bottom: 1rem;
 }
 
@@ -2235,429 +2235,201 @@ input:focus, select:focus, textarea:focus {
   color: var(--gold);
 }
 
-/* 3D Steps Grid */
-.steps-3d-grid {
+/* Clean Steps Grid */
+.steps-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.6rem;
-  margin-bottom: 3.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.4rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
 }
 
-.step-3d-card {
-  perspective: 1000px;
-}
-
-.step-card-glass {
-  height: 100%;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 1.5rem;
-  padding: 1.8rem 1.6rem;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
-}
-
-.step-card-glass:hover {
-  transform: translateY(-8px) rotateX(4deg);
-  border-color: var(--gold);
-  box-shadow: 0 16px 40px rgba(246, 196, 83, 0.2);
-}
-
-.step-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.step-icon-big {
-  font-size: 2.2rem;
-  line-height: 1;
-}
-
-.step-counter {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--gold);
-  opacity: 0.6;
-}
-
-.step-badge-pill {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--gold);
-  background: rgba(246, 196, 83, 0.12);
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(246, 196, 83, 0.25);
-  margin-bottom: 0.6rem;
-}
-
-.step-card-title {
-  font-size: 1.22rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}
-
-.step-card-desc {
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-dim);
-}
-
-/* The Sacred Family Honor Code */
-.honor-code-container {
-  margin-bottom: 3.5rem;
-}
-
-.honor-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.honor-badge {
-  display: inline-block;
-  background: rgba(211, 47, 47, 0.2);
-  color: #ff5252;
-  border: 1px solid rgba(211, 47, 47, 0.4);
-  padding: 0.3rem 0.95rem;
-  border-radius: 2rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.6rem;
-}
-
-.honor-title {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 1.85rem;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 0.4rem;
-}
-
-.honor-sub {
-  color: var(--text-dim);
-  font-size: 0.95rem;
-}
-
-.honor-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.honor-card {
+.step-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--glass-border);
-  border-radius: 1.4rem;
-  padding: 1.6rem;
+  border-radius: 1.1rem;
+  padding: 1.4rem;
   backdrop-filter: blur(12px);
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-sizing: border-box;
 }
 
-.honor-card:hover {
+.step-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(246, 196, 83, 0.5);
+  border-color: var(--gold);
   background: rgba(255, 255, 255, 0.08);
 }
 
-.honor-card-top {
+.step-top-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.8rem;
 }
 
-.honor-icon {
-  font-size: 1.8rem;
+.step-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--gold);
+  font-family: 'Onest', sans-serif;
+  line-height: 1;
 }
 
-.honor-tag {
-  font-size: 0.72rem;
-  font-weight: 700;
+.step-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--gold);
   background: rgba(246, 196, 83, 0.12);
+  border: 1px solid rgba(246, 196, 83, 0.3);
   padding: 0.2rem 0.65rem;
   border-radius: 1rem;
-}
-
-.honor-rule-title {
-  font-size: 1.15rem;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}
-
-.honor-rule-text {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--text-dim);
-}
-
-/* Interactive Loyalty & Betrayal Tracker Widget */
-.loyalty-widget-card {
-  background: linear-gradient(135deg, rgba(15, 61, 46, 0.3), rgba(211, 47, 47, 0.2));
-  border: 2px dashed rgba(246, 196, 83, 0.5);
-  border-radius: 1.6rem;
-  padding: 2.2rem;
-  text-align: center;
-  margin-bottom: 3.5rem;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
-}
-
-.loyalty-badge {
-  display: inline-block;
-  background: rgba(246, 196, 83, 0.15);
-  color: var(--gold);
-  border: 1px solid rgba(246, 196, 83, 0.35);
-  padding: 0.25rem 0.85rem;
-  border-radius: 2rem;
-  font-size: 0.78rem;
-  font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.04em;
 }
 
-.loyalty-title {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 1.55rem;
+.step-title {
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #fff;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.45rem;
+  font-family: 'Onest', sans-serif;
 }
 
-.loyalty-desc {
-  font-size: 0.92rem;
-  color: var(--text-dim);
-  max-width: 620px;
-  margin: 0 auto 1.5rem;
+.step-desc {
+  font-size: 0.9rem;
   line-height: 1.55;
+  color: var(--text-dim);
+  font-family: 'Onest', sans-serif;
 }
 
-.loyalty-actions-row {
+/* Responsive Try It Banner */
+.try-it-banner {
+  background: linear-gradient(135deg, var(--red), #880e4f);
+  border-radius: 1.25rem;
+  padding: 1.8rem 1.6rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 0.85rem;
-}
-
-.loyalty-btn {
-  padding: 0.75rem 1.4rem;
-  border-radius: 2rem;
-  font: 600 0.9rem 'Onest', sans-serif;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border: 1px solid transparent;
-}
-
-.loyalty-btn.pledge-btn {
-  background: linear-gradient(135deg, #2e7d32, #1b5e20);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.4);
-}
-
-.loyalty-btn.pledge-btn.active {
-  background: #4caf50;
-  box-shadow: 0 0 16px #4caf50;
-}
-
-.loyalty-btn.test-btn {
-  background: rgba(246, 196, 83, 0.15);
-  color: var(--gold);
-  border-color: rgba(246, 196, 83, 0.4);
-}
-
-.loyalty-btn.test-btn:hover {
-  background: var(--gold);
-  color: #000;
-}
-
-.loyalty-btn.alert-btn {
-  background: rgba(211, 47, 47, 0.15);
-  color: #ff5252;
-  border-color: rgba(211, 47, 47, 0.4);
-}
-
-.loyalty-btn.alert-btn:hover {
-  background: #d32f2f;
-  color: #fff;
-}
-
-.loyalty-score-banner {
-  margin-top: 1.4rem;
-  background: rgba(246, 196, 83, 0.18);
-  border: 1px solid var(--gold);
-  border-radius: 1rem;
-  padding: 0.75rem 1.2rem;
-  font-weight: 700;
-  color: #fff;
-  display: inline-block;
-  animation: pop-bounce 0.3s ease;
-}
-
-.report-alert-banner {
-  margin-top: 1.4rem;
-  background: rgba(211, 47, 47, 0.25);
-  border: 1px solid #ff5252;
-  border-radius: 1rem;
-  padding: 0.75rem 1.2rem;
-  font-weight: 700;
-  color: #ff8a80;
-  display: inline-block;
-  animation: pop-bounce 0.3s ease;
-}
-
-/* Portal Jump Banner */
-.portal-jump-banner {
-  background: linear-gradient(135deg, var(--red), #880e4f);
-  border-radius: 1.6rem;
-  padding: 2.2rem;
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  box-shadow: 0 1rem 3rem rgba(211, 47, 47, 0.45);
+  gap: 1.2rem;
+  box-shadow: 0 0.8rem 2.5rem rgba(211, 47, 47, 0.35);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.jump-content h3 {
-  font-size: 1.6rem;
-  margin-bottom: 0.3rem;
+.banner-text {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.banner-text h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
   color: #fff;
+  margin-bottom: 0.25rem;
+  word-break: break-word;
 }
 
-.jump-content p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.98rem;
+.banner-text p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.92rem;
 }
 
-.jump-cta-btn {
+.cta-jump-btn {
   background: var(--gold);
   color: #000;
   border: none;
-  padding: 0.9rem 1.8rem;
+  padding: 0.8rem 1.6rem;
   border-radius: 2rem;
-  font: 700 1rem 'Onest', sans-serif;
+  font: 700 0.95rem 'Onest', sans-serif;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 6px 20px rgba(246, 196, 83, 0.4);
   transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(246, 196, 83, 0.4);
 }
 
-.jump-cta-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 24px rgba(246, 196, 83, 0.6);
+.cta-jump-btn:hover {
+  transform: scale(1.03);
 }
 
-.faq-question-btn {
-  width: 100%;
-  padding: 1.1rem 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: transparent;
-  border: none;
-  color: #fff;
-  font: 600 1.05rem 'Onest', sans-serif;
-  text-align: left;
-  cursor: pointer;
+@media (max-width: 540px) {
+  .try-it-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.4rem 1rem;
+  }
+  .banner-text {
+    width: 100%;
+  }
+  .cta-jump-btn {
+    width: 100%;
+    max-width: 240px;
+    padding: 0.75rem 1.2rem;
+  }
 }
 
-.faq-arrow {
-  font-size: 0.8rem;
-  color: var(--gold);
-}
-
-.faq-answer {
-  padding: 0 1.4rem 1.2rem;
-  color: var(--text-dim);
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
-
-/* ====================================================
-   FOOTER
-   ==================================================== */
-.festive-footer {
+/* Simple Clean Footer */
+.simple-footer {
   position: relative;
   z-index: 2;
   background: #040d16;
   border-top: 1px solid var(--glass-border);
-  padding: 4rem 1.5rem 2rem;
+  padding: 2.2rem 1.5rem;
 }
 
-.footer-content {
+.footer-container {
   max-width: 1200px;
-  margin: 0 auto 3rem;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 2.5rem;
-}
-
-.footer-brand h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.6rem;
-}
-
-.footer-brand p {
-  color: var(--text-dim);
-  font-size: 0.92rem;
-  max-width: 22rem;
-  line-height: 1.55;
-}
-
-.footer-nav-col, .footer-rules-col {
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 1.2rem;
+  text-align: center;
 }
 
-.footer-nav-col h4, .footer-rules-col h4 {
-  font-size: 1.05rem;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
+.footer-top {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.footer-nav-col button {
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  font: 500 0.9rem 'Onest', sans-serif;
-  text-align: left;
-  cursor: pointer;
-  padding: 0.2rem 0;
-  transition: color 0.2s;
-}
-
-.footer-nav-col button:hover {
+.footer-title {
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #fff;
 }
 
-.footer-rules-col p {
-  font-size: 0.9rem;
-  color: var(--text-dim);
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.footer-bottom-bar {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.85rem;
+.footer-nav button {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font: 500 0.88rem 'Onest', sans-serif;
+  cursor: pointer;
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+}
+
+.footer-nav button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.footer-bottom p {
+  font-size: 0.82rem;
   color: var(--text-muted);
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
 /* ====================================================
