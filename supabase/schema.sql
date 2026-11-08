@@ -1,7 +1,15 @@
--- Run this whole file in Supabase > SQL Editor
+-- Complete Clean Slate Setup for Supabase SQL Editor
+-- Run this entire script in Supabase > SQL Editor
+
+-- 1. Enable pgcrypto for secure bcrypt password hashing
 create extension if not exists pgcrypto with schema extensions;
 
-create table if not exists members (
+-- 2. Clean start: Drop existing table & function if they exist
+drop table if exists members cascade;
+drop function if exists santa_login(text, text);
+
+-- 3. Create members table
+create table members (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   phone text unique not null,
@@ -10,8 +18,10 @@ create table if not exists members (
   giving_to uuid unique references members(id),   -- unique = a person can be picked only once
   check (giving_to <> id)                          -- nobody gets themselves
 );
-alter table members enable row level security;     -- no policies: the public key can't read the table
 
+alter table members enable row level security;     -- no policies: public key can't read directly
+
+-- 4. Create the secure login and draw function
 create or replace function santa_login(p_phone text, p_password text)
 returns json language plpgsql security definer set search_path = public, extensions as $$
 declare me members; t members; cand uuid; other uuid; undrawn int;
@@ -38,9 +48,10 @@ begin
   return json_build_object('name', me.name, 'photo', me.photo_url,
          'target', json_build_object('name', t.name, 'photo', t.photo_url));
 end $$;
+
 grant execute on function santa_login(text, text) to anon;
 
--- Seed all 12 Family Members with encrypted passwords
+-- 5. Seed all 12 Family Members with encrypted passwords in order (Sre Nithi #11, Sakthi #12)
 insert into members (name, phone, password_hash, photo_url) values
   ('Aadhi', '9361386647', crypt('sakthikarthikadithya', gen_salt('bf')), '/elves/aadhi.jpg'),
   ('Sreedharan Kandavel', '6383659695', crypt('jeffnippard', gen_salt('bf')), '/elves/sreedharan.jpg'),
@@ -52,12 +63,5 @@ insert into members (name, phone, password_hash, photo_url) values
   ('Sailoga Prakash', '6382896498', crypt('powerstar', gen_salt('bf')), '/elves/sailoga.jpg'),
   ('Aadhu', '6383335626', crypt('aadhuiiii', gen_salt('bf')), '/elves/aadhu.jpg'),
   ('Sarath Vikram', '7010043287', crypt('sree anna', gen_salt('bf')), '/elves/sarath.jpg'),
-  ('Srinithi', '9000000011', crypt('srenithi2026', gen_salt('bf')), '/elves/srenithi.jpg'),
-  ('Sakthi', '9344626769', crypt('adminlogin', gen_salt('bf')), '/elves/sakthi.jpg')
-on conflict (phone) do update set
-  password_hash = excluded.password_hash,
-  name = excluded.name,
-  photo_url = excluded.photo_url;
-
--- Optional: To reset everyone's draw to null for the official start, run:
--- update members set giving_to = null;
+  ('Sre Nithi', '9000000011', crypt('srenithi2026', gen_salt('bf')), '/elves/srenithi.jpg'),
+  ('Sakthi', '9344626769', crypt('adminlogin', gen_salt('bf')), '/elves/sakthi.jpg');

@@ -58,7 +58,7 @@ export default function Login({ onDone }) {
       audio.volume = 1.0;
       audio.play().catch(() => {
         if ('speechSynthesis' in window) {
-          const u = new SpeechSynthesisUtterance('Wrong credentials! Make it as per the admin gave you, idiot!');
+          const u = new SpeechSynthesisUtterance('Ho ho ho! Wrong credentials! Make it as per the admin gave you, idiot!');
           u.rate = 1.05;
           u.pitch = 0.85;
           window.speechSynthesis.speak(u);
@@ -66,13 +66,13 @@ export default function Login({ onDone }) {
       });
     } catch {
       if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance('Wrong credentials! Make it as per the admin gave you, idiot!');
+        const u = new SpeechSynthesisUtterance('Ho ho ho! Wrong credentials! Make it as per the admin gave you, idiot!');
         window.speechSynthesis.speak(u);
       }
     }
     setTimeout(() => {
       setIsAngry(false);
-    }, 4500);
+    }, 7000);
   };
 
   const submit = async (e) => {
@@ -82,7 +82,7 @@ export default function Login({ onDone }) {
     try {
       const me = await login(phone.trim(), pw);
       if (!me) {
-        setErr("Wrong credentials! Make it as per the admin gave you, idiot!");
+        setErr("Ho ho ho! Wrong credentials! Make it as per the admin gave you, idiot!");
         playAngryVoice();
       } else {
         onDone(me);
