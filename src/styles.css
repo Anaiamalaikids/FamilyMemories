@@ -24,6 +24,7 @@
 html {
   font-size: clamp(14px, 1.1vw + 7px, 18px);
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -33,6 +34,7 @@ body {
   background: radial-gradient(120% 90% at 50% 0, #13334c, var(--night) 75%);
   overflow-x: hidden;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
@@ -47,6 +49,8 @@ h1, h2, h3, h4 {
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .trees {
@@ -59,6 +63,8 @@ h1, h2, h3, h4 {
   z-index: 0;
   pointer-events: none;
   opacity: 0.85;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .app-container {
@@ -82,6 +88,8 @@ h1, h2, h3, h4 {
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--glass-border);
   transition: all 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .navbar {
@@ -498,6 +506,9 @@ h1, h2, h3, h4 {
   overflow: hidden;
   z-index: -1;
   pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
+  contain: paint;
 }
 
 .ambient-bg-video {
@@ -505,7 +516,9 @@ h1, h2, h3, h4 {
   height: 100%;
   object-fit: cover;
   filter: blur(24px) brightness(0.3) saturate(1.2);
-  transform: scale(1.1);
+  transform: scale(1.1) translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .ambient-overlay {
@@ -634,6 +647,64 @@ h1, h2, h3, h4 {
   background: rgba(246, 196, 83, 0.25);
   border-color: var(--gold);
   color: var(--gold);
+}
+
+/* Finished Playing Twice Overlay */
+.video-finished-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 13, 22, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 10;
+  animation: fadeInOverlay 0.3s ease;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.finished-message-box {
+  background: rgba(11, 29, 46, 0.95);
+  border: 1px solid var(--gold);
+  border-radius: 1.25rem;
+  padding: 1.4rem 1.6rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  max-width: 90%;
+}
+
+.finished-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.45;
+}
+
+.replay-video-btn {
+  background: var(--gold);
+  color: #000;
+  border: none;
+  font: 700 0.92rem 'Onest', sans-serif;
+  padding: 0.65rem 1.4rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 15px rgba(246, 196, 83, 0.4);
+}
+
+.replay-video-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(246, 196, 83, 0.6);
 }
 
 .video-frame-footer {
@@ -2591,3 +2662,51 @@ input:focus, select:focus, textarea:focus {
     max-width: 90vw;
   }
 }
+
+/* Floating Scroll to Top Button */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 50%;
+  background: rgba(11, 29, 46, 0.94);
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 150;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) translateZ(0);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) translateZ(0);
+}
+
+.scroll-top-btn:hover {
+  background: var(--gold);
+  color: #000;
+  transform: translateY(-3px) scale(1.08) translateZ(0);
+  box-shadow: 0 10px 28px rgba(246, 196, 83, 0.5);
+}
+
+@media (max-width: 600px) {
+  .scroll-top-btn {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 2.7rem;
+    height: 2.7rem;
+  }
+}
+

@@ -23,6 +23,20 @@ const Trees = () => (
 export default function App() {
   const [me, setMe] = useState(null)
   const [activeSection, setActiveSection] = useState('home')
+  const [showScrollTop, setShowScrollTop] = useState(false)
+
+  // Listen to scroll position for Back-to-Top button
+  useEffect(() => {
+    const checkScroll = () => {
+      setShowScrollTop(window.scrollY > 350)
+    }
+    window.addEventListener('scroll', checkScroll, { passive: true })
+    return () => window.removeEventListener('scroll', checkScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   // Restore previous session from sessionStorage if any
   useEffect(() => {
@@ -52,6 +66,10 @@ export default function App() {
 
   const handleNavigate = (sectionId) => {
     setActiveSection(sectionId)
+    if (sectionId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
     // If not logged in, scroll to section on the page
     if (!me) {
       const el = document.getElementById(sectionId)
@@ -110,6 +128,28 @@ export default function App() {
 
       {/* Footer */}
       <Footer onNavigate={handleNavigate} />
+
+      {/* Floating Back to Top Button */}
+      <button
+        type="button"
+        className={`scroll-top-btn ${showScrollTop ? 'visible' : ''}`}
+        onClick={scrollToTop}
+        aria-label="Scroll to top"
+        title="Back to top"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="18 15 12 9 6 15" />
+        </svg>
+      </button>
     </div>
   )
 }

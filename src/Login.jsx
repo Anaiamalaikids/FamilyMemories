@@ -13,10 +13,11 @@ export default function Login({ onDone }) {
 
   // Video controls
   const videoRef = useRef(null);
+  const ambientVideoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
-
-
+  const [playCount, setPlayCount] = useState(0);
+  const [hasFinishedTwice, setHasFinishedTwice] = useState(false);
 
   // Santa follows pointer / touch
   useEffect(() => {
@@ -32,6 +33,45 @@ export default function Login({ onDone }) {
     };
   }, []);
 
+  const handleVideoEnded = () => {
+    setPlayCount((prev) => {
+      const next = prev + 1;
+      if (next >= 2) {
+        setHasFinishedTwice(true);
+        setIsPlaying(false);
+        if (videoRef.current) {
+          videoRef.current.pause();
+        }
+        if (ambientVideoRef.current) {
+          ambientVideoRef.current.pause();
+        }
+        return next;
+      } else {
+        // Replay second time automatically
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0;
+          videoRef.current.play().catch(() => {});
+          setIsPlaying(true);
+        }
+        return next;
+      }
+    });
+  };
+
+  const handleReplayVideo = () => {
+    setHasFinishedTwice(false);
+    setPlayCount(0);
+    setIsPlaying(true);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+    if (ambientVideoRef.current) {
+      ambientVideoRef.current.currentTime = 0;
+      ambientVideoRef.current.play().catch(() => {});
+    }
+  };
+
   const toggleMute = () => {
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted;
@@ -41,6 +81,10 @@ export default function Login({ onDone }) {
 
   const togglePlay = () => {
     if (videoRef.current) {
+      if (hasFinishedTwice) {
+        handleReplayVideo();
+        return;
+      }
       if (videoRef.current.paused) {
         videoRef.current.play();
         setIsPlaying(true);
@@ -100,10 +144,11 @@ export default function Login({ onDone }) {
       {/* Ambient background video layer */}
       <div className="ambient-video-layer">
         <video
+          ref={ambientVideoRef}
           className="ambient-bg-video"
           src="/sree.mp4"
           autoPlay
-          loop
+          loop={!hasFinishedTwice}
           muted
           playsInline
         />
@@ -139,21 +184,39 @@ export default function Login({ onDone }) {
                   className="showcase-video"
                   src="/sree.mp4"
                   autoPlay
-                  loop
                   muted={isMuted}
                   playsInline
+                  onEnded={handleVideoEnded}
                 />
+
+                {/* Stopped after 2 plays prompt overlay */}
+                {hasFinishedTwice && (
+                  <div className="video-finished-overlay">
+                    <div className="finished-message-box">
+                      <p className="finished-text">Stopped auto-playing cuz it's irritating!</p>
+                      <button
+                        type="button"
+                        className="replay-video-btn"
+                        onClick={handleReplayVideo}
+                      >
+                        Play Video Again
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Floating Video Controls */}
                 <div className="video-controls-overlay">
                   <button
+                    type="button"
                     className="video-ctrl-btn"
                     onClick={togglePlay}
                     title={isPlaying ? "Pause video" : "Play video"}
                   >
-                    {isPlaying ? "Pause" : "Play"}
+                    {hasFinishedTwice ? "Replay" : isPlaying ? "Pause" : "Play"}
                   </button>
                   <button
+                    type="button"
                     className={`video-ctrl-btn ${!isMuted ? "active-audio" : ""}`}
                     onClick={toggleMute}
                     title={isMuted ? "Unmute video audio" : "Mute audio"}
