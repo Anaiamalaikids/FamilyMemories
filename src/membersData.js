@@ -12,7 +12,8 @@ export const MEMBERS = [
     quote: 'A true master of maintaining a spotless reputation!',
     color: '#fbc02d',
     status: 'Ready to Gift',
-    avatar: 'A'
+    avatar: 'A',
+    photo: '/elves/aadhi.jpg'
   },
   {
     id: 2,
@@ -26,7 +27,8 @@ export const MEMBERS = [
     quote: 'An elder brother by age, but permanently a junior when it comes to family authority!',
     color: '#1976d2',
     status: 'Ready to Gift',
-    avatar: 'S'
+    avatar: 'S',
+    photo: '/elves/sreeharan.jpg'
   },
   {
     id: 3,
@@ -40,7 +42,8 @@ export const MEMBERS = [
     quote: 'Flawless human being — with unlimited nicknames and food cravings!',
     color: '#2e7d32',
     status: 'Ready to Gift',
-    avatar: 'H'
+    avatar: 'H',
+    photo: '/elves/harikrishnan.jpg'
   },
   {
     id: 4,
@@ -54,7 +57,8 @@ export const MEMBERS = [
     quote: "Perfect in almost everything, effortlessly innocent and undoubtedly the admin's favourite!",
     color: '#8e24aa',
     status: 'Ready to Gift',
-    avatar: 'B'
+    avatar: 'B',
+    photo: '/elves/brinda.jpg'
   },
   {
     id: 5,
@@ -68,7 +72,8 @@ export const MEMBERS = [
     quote: 'A senior by experience, a sixth grader by appearance, and a comedy show whenever she gets angry!',
     color: '#d81b60',
     status: 'Ready to Gift',
-    avatar: 'S'
+    avatar: 'S',
+    photo: '/elves/sathya.jpg'
   },
   {
     id: 6,
@@ -82,7 +87,8 @@ export const MEMBERS = [
     quote: "A full-time entertainer with a placement package to prove that life doesn't always follow the textbook!",
     color: '#00897b',
     status: 'Ready to Gift',
-    avatar: 'S'
+    avatar: 'S',
+    photo: '/elves/shruthi.jpg'
   },
   {
     id: 7,
@@ -96,7 +102,8 @@ export const MEMBERS = [
     quote: "The family's unofficial customer support department, always available to help everyone!",
     color: '#7b1fa2',
     status: 'Ready to Gift',
-    avatar: 'S'
+    avatar: 'S',
+    photo: '/elves/swarna.jpg'
   },
   {
     id: 8,
@@ -110,7 +117,8 @@ export const MEMBERS = [
     quote: 'A rare character in a world where kindness itself sometimes needs an explanation!',
     color: '#3949ab',
     status: 'Ready to Gift',
-    avatar: 'S'
+    avatar: 'S',
+    photo: '/elves/sailoga.jpg'
   },
   {
     id: 9,
@@ -124,7 +132,8 @@ export const MEMBERS = [
     quote: 'A respectful gentleman outside the gaming arena and a permanently challenged competitor inside it!',
     color: '#e64a19',
     status: 'Ready to Gift',
-    avatar: 'A'
+    avatar: 'A',
+    photo: '/elves/aadhu.jpg'
   },
   {
     id: 10,
@@ -138,7 +147,8 @@ export const MEMBERS = [
     quote: 'A combination of intelligence, kindness, patience and impeccable taste — the guy who can disagree without disrespecting you!',
     color: '#0288d1',
     status: 'Ready to Gift',
-    avatar: 'S'
+    avatar: 'S',
+    photo: '/elves/sarath.jpg'
   },
   {
     id: 11,
@@ -152,7 +162,8 @@ export const MEMBERS = [
     quote: 'Avoids the camera, but never avoids giving opinions!',
     color: '#c62828',
     status: 'Ready to Gift',
-    avatar: 'S'
+    avatar: 'S',
+    photo: '/elves/sakthi.jpg'
   }
 ]
 

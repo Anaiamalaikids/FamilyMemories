@@ -9,6 +9,7 @@ export default function Login({ onDone }) {
   const [hide, setHide] = useState(false);
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [isAngry, setIsAngry] = useState(false);
 
   // Video controls
   const videoRef = useRef(null);
@@ -50,6 +51,30 @@ export default function Login({ onDone }) {
     }
   };
 
+  const playAngryVoice = () => {
+    setIsAngry(true);
+    try {
+      const audio = new Audio('/santa_angry.mp3');
+      audio.volume = 1.0;
+      audio.play().catch(() => {
+        if ('speechSynthesis' in window) {
+          const u = new SpeechSynthesisUtterance('Make it as per the admin gave you, idiot!');
+          u.rate = 1.05;
+          u.pitch = 0.85;
+          window.speechSynthesis.speak(u);
+        }
+      });
+    } catch {
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance('Make it as per the admin gave you, idiot!');
+        window.speechSynthesis.speak(u);
+      }
+    }
+    setTimeout(() => {
+      setIsAngry(false);
+    }, 4500);
+  };
+
   const submit = async (e) => {
     e.preventDefault();
     setErr("");
@@ -57,7 +82,8 @@ export default function Login({ onDone }) {
     try {
       const me = await login(phone.trim(), pw);
       if (!me) {
-        setErr("Invalid mobile number or password. Check with the Admin!");
+        setErr("Make it as per the admin gave you, idiot!");
+        playAngryVoice();
       } else {
         onDone(me);
       }
@@ -147,7 +173,7 @@ export default function Login({ onDone }) {
           {/* Right Column: Interactive Login Card with Santa */}
           <div className="login-form-column">
             <div className="rail">
-              <Santa x={x} hideEyes={hide} />
+              <Santa x={x} hideEyes={hide} isAngry={isAngry} />
             </div>
 
             <form
