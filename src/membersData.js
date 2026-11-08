@@ -146,7 +146,7 @@ export const MEMBERS = [
     role: 'The Academic All-Rounder & Sports Champ',
     subtitle: 'The Young Genius of the Family',
     badge: 'School Topper & Sports Star',
-    phone: '9080369299',
+    phone: '9080369229',
     bio: 'The bright young prodigy of the family who makes excellence look completely effortless! While the older brothers and sisters are busy finding shortcuts in life, procrastinating, and gossiping, Srenithi is busy scoring top grades in school and winning sports events on the track. A genuinely sweet, energetic, and multi-talented soul with a champion attitude. The only real family mystery is how someone so disciplined, smart, and well-behaved ended up in the same gang as these other crazy elves!',
     quote: 'Balancing school textbooks, sports trophies, and family madness with a champion smile!',
     color: '#ec407a',

@@ -15,7 +15,7 @@ const MEMBERS = [
   { name: 'Sailoga Prakash', phone: '6382896498' },
   { name: 'Aadhu', phone: '6383335626' },
   { name: 'Sarath Vikram', phone: '7010043287' },
-  { name: 'Srenithi', phone: '9080369299' },
+  { name: 'Srenithi', phone: '9080369229' },
   { name: 'Sakthi', phone: '9344626769' },
 ]
 
