@@ -40,19 +40,24 @@ begin
 end $$;
 grant execute on function santa_login(text, text) to anon;
 
--- Seed the 11 Family Members with their actual credentials
+-- Seed all 12 Family Members with encrypted passwords
 insert into members (name, phone, password_hash, photo_url) values
-  ('Aadhi', '9361386647', crypt('sakthikarthikadithya', gen_salt('bf')), null),
-  ('Sreedharan Kandavel', '6383659695', crypt('jeffnippard', gen_salt('bf')), null),
-  ('Harikrishnan', '7695898730', crypt('harik1338', gen_salt('bf')), null),
-  ('Brinda', '9344858175', crypt('brindakumar', gen_salt('bf')), null),
-  ('Sathya', '9080636525', crypt('saththikumar', gen_salt('bf')), null),
-  ('Shruthi', '7010151872', crypt('suruthijoke', gen_salt('bf')), null),
-  ('Swarna Akshita', '7812854115', crypt('achudhandam', gen_salt('bf')), null),
-  ('Sailoga Prakash', '6382896498', crypt('powerstar', gen_salt('bf')), null),
-  ('Aadhu', '6383335626', crypt('aadhuiiii', gen_salt('bf')), null),
-  ('Sarath Vikram', '7010043287', crypt('sree anna', gen_salt('bf')), null),
-  ('Sakthi', '9344626769', crypt('adminlogin', gen_salt('bf')), null)
+  ('Aadhi', '9361386647', crypt('sakthikarthikadithya', gen_salt('bf')), '/elves/aadhi.jpg'),
+  ('Sreedharan Kandavel', '6383659695', crypt('jeffnippard', gen_salt('bf')), '/elves/sreedharan.jpg'),
+  ('Harikrishnan', '7695898730', crypt('harik1338', gen_salt('bf')), '/elves/harikrishnan.jpg'),
+  ('Brinda', '9344858175', crypt('brindakumar', gen_salt('bf')), '/elves/brinda.jpg'),
+  ('Sathya', '9080636525', crypt('saththikumar', gen_salt('bf')), '/elves/sathya.jpg'),
+  ('Shruthi', '7010151872', crypt('suruthijoke', gen_salt('bf')), '/elves/shruthi.jpg'),
+  ('Swarna Akshita', '7812854115', crypt('achudhandam', gen_salt('bf')), '/elves/achu.jpg'),
+  ('Sailoga Prakash', '6382896498', crypt('powerstar', gen_salt('bf')), '/elves/sailoga.jpg'),
+  ('Aadhu', '6383335626', crypt('aadhuiiii', gen_salt('bf')), '/elves/aadhu.jpg'),
+  ('Sarath Vikram', '7010043287', crypt('sree anna', gen_salt('bf')), '/elves/sarath.jpg'),
+  ('Srinithi', '9000000011', crypt('srenithi2026', gen_salt('bf')), '/elves/srenithi.jpg'),
+  ('Sakthi', '9344626769', crypt('adminlogin', gen_salt('bf')), '/elves/sakthi.jpg')
 on conflict (phone) do update set
   password_hash = excluded.password_hash,
-  name = excluded.name;
+  name = excluded.name,
+  photo_url = excluded.photo_url;
+
+-- Optional: To reset everyone's draw to null for the official start, run:
+-- update members set giving_to = null;

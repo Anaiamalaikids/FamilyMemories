@@ -16,10 +16,10 @@ export default function Members() {
       <div className="section-container">
         {/* Section Header */}
         <div className="section-header">
-          <div className="badge-pill">The 11 Family Members</div>
+          <div className="badge-pill">The 12 Family Members</div>
           <h2 className="section-title">Members & Personalities</h2>
           <p className="section-sub">
-            The 11 members taking part in our gift exchange. Find out each person’s role, funny habits, and personality.
+            The 12 members taking part in our Secret Santa & New Year gift exchange. Find out each person’s role, funny habits, and personality.
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export default function Members() {
           <span className="search-icon">🔍</span>
           <input
             type="text"
-            placeholder="Search by name or role (e.g., Kamal, Cookie, Alex)…"
+            placeholder="Search by name or role (e.g., Aadhi, Srinithi, Sakthi)…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -37,7 +37,7 @@ export default function Members() {
           )}
         </div>
 
-        {/* 11 Members Grid */}
+        {/* 12 Members Grid */}
         <div className="members-grid">
           {filteredMembers.map((member) => {
             const avatarUrl = createHolidayAvatar(member.name, member.color)
@@ -100,7 +100,7 @@ export default function Members() {
         {filteredMembers.length === 0 && (
           <div className="no-members-found">
             <p>No members found matching "{search}".</p>
-            <button className="reset-btn" onClick={() => setSearch('')}>Show All 11 Members</button>
+            <button className="reset-btn" onClick={() => setSearch('')}>Show All 12 Members</button>
           </div>
         )}
 

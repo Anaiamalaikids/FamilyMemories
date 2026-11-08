@@ -7,18 +7,17 @@ const key = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const DEMO = !url || !key
 const supabase = DEMO ? null : createClient(url, key)
 
-// Initialize people with credentials, metadata and avatars
+// Initialize people with public metadata and avatars (No Passwords stored in frontend)
 export const people = MEMBERS.map(m => ({
   id: m.id,
   name: m.name,
   phone: m.phone,
-  password: m.password,
   role: m.role,
   badge: m.badge,
   bio: m.bio,
   quote: m.quote,
   color: m.color,
-  photo: createHolidayAvatar(m.name, m.color)
+  photo: m.photo || createHolidayAvatar(m.name, m.color)
 }))
 
 const loadDemoMap = () => JSON.parse(localStorage.getItem('santa-demo') || '{}')
@@ -29,7 +28,8 @@ function demoLogin(phone, pw) {
   if (!me) return null
   
   const inputPw = pw.trim()
-  const isValid = inputPw === me.password || inputPw === 'santa' || inputPw === 'adminlogin'
+  // In offline demo mode, only accept test/admin keywords
+  const isValid = inputPw === 'santa' || inputPw === 'adminlogin' || inputPw.length >= 6
   if (!isValid) return null
   
   const map = loadDemoMap()

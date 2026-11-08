@@ -2,8 +2,8 @@ export default function Navbar({ activeSection, onNavigate, currentUser, onLogou
   const navItems = [
     { id: 'home', label: 'Home', icon: '🏠' },
     { id: 'memories', label: 'Memories', icon: '📸' },
-    { id: 'members', label: '11 Elves', icon: '🧝' },
-    { id: 'how-to-use', label: 'Guide', icon: '❓' },
+    { id: 'members', label: '12 Elves', icon: '🧝' },
+    { id: 'how-to-use', label: 'Guide', icon: '📜' },
   ]
 
   const handleNavClick = (id) => {
@@ -34,7 +34,7 @@ export default function Navbar({ activeSection, onNavigate, currentUser, onLogou
                   onClick={() => handleNavClick(item.id)}
                 >
                   <span className="nav-item-icon">{item.icon}</span>
-                  <span>{item.id === 'members' ? 'The 11 Elves' : item.id === 'how-to-use' ? 'How to Use' : item.label}</span>
+                  <span>{item.id === 'members' ? 'The 12 Elves' : item.id === 'how-to-use' ? 'How to Use' : item.label}</span>
                   {activeSection === item.id && <span className="nav-indicator" />}
                 </button>
               </li>

@@ -114,13 +114,13 @@ export default function Reveal({ me, onExit, onNavigate }) {
 
             <h1 className="reveal-greeting">{getGreeting()}, {me.name}</h1>
             <p className="reveal-sub">
-              Your Secret Santa gift is locked and ready. Click below to play the Christmas reveal video and discover who you are gifting.
+              Your Secret Santa assignment is locked and confidential. Watch the special reveal video to discover who you are gifting for New Year 2026!
             </p>
 
             {/* Holiday Countdown Badge */}
             <div className="countdown-bar">
               <span className="countdown-text">
-                Christmas in: <strong>{countdown.days}d {countdown.hours}h {countdown.minutes}m</strong>
+                🎄 Reveal: <strong>Christmas Day</strong> • 🎁 Gift Handover: <strong>New Year 2026</strong>
               </span>
             </div>
 
@@ -135,7 +135,7 @@ export default function Reveal({ me, onExit, onNavigate }) {
 
             {/* Action Button */}
             <button className="open-gift-btn" onClick={handleOpenGift}>
-              <span className="btn-text">Open My Gift</span>
+              <span className="btn-text">Reveal Who I'm Gifting 🎁</span>
             </button>
 
             <p className="secrecy-note">
@@ -150,10 +150,10 @@ export default function Reveal({ me, onExit, onNavigate }) {
             <div className="video-theater-box">
               <div className="theater-header">
                 <div className="theater-badge">
-                  <span className="pulse-red" /> Unwrapping Gift Video…
+                  <span className="pulse-red" /> Unwrapping Reveal Video…
                 </div>
                 <button className="theater-skip-btn" onClick={triggerReveal}>
-                  Reveal Person Now ➔
+                  Reveal Who I'm Gifting ➔
                 </button>
               </div>
 
@@ -183,7 +183,7 @@ export default function Reveal({ me, onExit, onNavigate }) {
 
               <div className="theater-footer">
                 <button className="reveal-now-pill" onClick={triggerReveal}>
-                  Reveal My Secret Target
+                  Reveal Who I'm Gifting Now ➔
                 </button>
               </div>
             </div>
@@ -197,7 +197,7 @@ export default function Reveal({ me, onExit, onNavigate }) {
               <span>Confidential Match Revealed</span>
             </div>
 
-            <p className="revealed-pretitle">You are the Secret Santa for</p>
+            <p className="revealed-pretitle">You are the Secret Santa gifting to</p>
 
             {/* Target Person Image */}
             <div className="target-portrait-container">
@@ -229,7 +229,7 @@ export default function Reveal({ me, onExit, onNavigate }) {
                 <strong>Your Secret Santa Mission:</strong>
               </div>
               <p className="mission-text">
-                Find or prepare a special gift for <strong>{me.target.name}</strong>. Keep your identity completely secret until the family opens gifts together!
+                Find or prepare a special gift for <strong>{me.target.name}</strong>. Keep your identity 100% confidential until the family gathers to exchange gifts on New Year 2026!
               </p>
             </div>
 
