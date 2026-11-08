@@ -37,6 +37,18 @@ export default function Reveal({ me, onExit, onNavigate }) {
     return () => clearInterval(timer)
   }, [])
 
+  // Mobile back gesture closes the reveal video modal back to welcome
+  useEffect(() => {
+    if (step === 'playing_video') {
+      window.history.pushState({ modal: 'reveal_video' }, '')
+      const handlePop = () => {
+        setStep('welcome')
+      }
+      window.addEventListener('popstate', handlePop, { once: true })
+      return () => window.removeEventListener('popstate', handlePop)
+    }
+  }, [step])
+
   // Start video play when "Open My Gift" is clicked
   const handleOpenGift = () => {
     setStep('playing_video')

@@ -10,12 +10,28 @@ export default function Memories() {
   const openAlbum = (album) => {
     setActiveAlbum(album)
     setPhotoIndex(0)
+    // Push history state so mobile back gesture closes modal instead of exiting the site
+    window.history.pushState({ modal: 'album', albumId: album.id }, '')
   }
 
-  const closeAlbum = () => {
+  const closeAlbum = (fromHistory = false) => {
     setActiveAlbum(null)
     setPhotoIndex(0)
+    if (!fromHistory && window.history.state?.modal === 'album') {
+      window.history.back()
+    }
   }
+
+  // Handle mobile navigation gesture / browser back button to close album
+  useEffect(() => {
+    const handlePopState = () => {
+      if (activeAlbum) {
+        closeAlbum(true)
+      }
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [activeAlbum])
 
   const handleNextPhoto = (total) => {
     setPhotoIndex((prev) => (prev + 1) % total)

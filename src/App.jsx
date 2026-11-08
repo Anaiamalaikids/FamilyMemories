@@ -64,8 +64,41 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const handleNavigate = (sectionId) => {
+  // Set initial history state on load
+  useEffect(() => {
+    if (!window.history.state) {
+      window.history.replaceState({ section: 'home' }, '')
+    }
+  }, [])
+
+  // Listen for mobile back gesture / browser back button to navigate to home instead of leaving site
+  useEffect(() => {
+    const handlePopState = (e) => {
+      // If a modal was open, it handled its own popstate
+      if (e.state?.modal) return
+
+      const target = e.state?.section || 'home'
+      setActiveSection(target)
+      if (target === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        const el = document.getElementById(target)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      }
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [me])
+
+  const handleNavigate = (sectionId, pushHistory = true) => {
     setActiveSection(sectionId)
+    if (pushHistory) {
+      window.history.pushState({ section: sectionId }, '')
+    }
     if (sectionId === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
