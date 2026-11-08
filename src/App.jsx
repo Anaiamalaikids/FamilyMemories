@@ -6,6 +6,7 @@ import Reveal from './Reveal.jsx'
 import Memories from './Memories.jsx'
 import Members from './Members.jsx'
 import HowToUse from './HowToUse.jsx'
+import AdminPanel from './AdminPanel.jsx'
 import Footer from './Footer.jsx'
 
 const Trees = () => (
@@ -132,8 +133,9 @@ export default function App() {
       />
 
       <main className="main-content">
-        {/* LOGGED IN MODE: Clean, dedicated confidential view without background bleed */}
-        {me ? (
+        {activeSection === 'admin' ? (
+          <AdminPanel currentUser={me} onExit={() => handleNavigate('home')} />
+        ) : me ? (
           <>
             {activeSection === 'home' && (
               <Reveal

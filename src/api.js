@@ -101,3 +101,82 @@ export async function login(phone, password) {
     }
   }
 }
+
+// ==========================================
+// Admin Panel API Functions (Password Protected)
+// ==========================================
+
+export async function adminGetMembers(adminPw) {
+  if (DEMO) {
+    const map = loadDemoMap()
+    return people.map(p => ({
+      id: p.id,
+      name: p.name,
+      phone: p.phone,
+      photo_url: p.photo,
+      has_drawn: Boolean(map[p.name]),
+      target_name: map[p.name] || null
+    }))
+  }
+  const { data, error } = await supabase.rpc('admin_get_members', { p_admin_pw: adminPw })
+  if (error) throw error
+  if (data?.error) throw new Error(data.error)
+  return data || []
+}
+
+export async function adminResetAllDraws(adminPw) {
+  if (DEMO) {
+    localStorage.removeItem('santa-demo')
+    return { success: true }
+  }
+  const { data, error } = await supabase.rpc('admin_reset_all_draws', { p_admin_pw: adminPw })
+  if (error) throw error
+  if (data?.error) throw new Error(data.error)
+  return data
+}
+
+export async function adminResetSingleDraw(adminPw, memberId) {
+  if (DEMO) {
+    const map = loadDemoMap()
+    const member = people.find(p => p.id === memberId)
+    if (member) {
+      delete map[member.name]
+      localStorage.setItem('santa-demo', JSON.stringify(map))
+    }
+    return { success: true }
+  }
+  const { data, error } = await supabase.rpc('admin_reset_single_draw', { p_admin_pw: adminPw, p_member_id: memberId })
+  if (error) throw error
+  if (data?.error) throw new Error(data.error)
+  return data
+}
+
+export async function adminAddMember(adminPw, { name, phone, password, photo }) {
+  if (DEMO) {
+    return { success: true }
+  }
+  const cleanPhone = phone.trim().replace(/\D/g, '')
+  const { data, error } = await supabase.rpc('admin_add_member', {
+    p_admin_pw: adminPw,
+    p_name: name.trim(),
+    p_phone: cleanPhone,
+    p_password: password.trim(),
+    p_photo: photo || '/santa_shh.jpg'
+  })
+  if (error) throw error
+  if (data?.error) throw new Error(data.error)
+  return data
+}
+
+export async function adminRemoveMember(adminPw, memberId) {
+  if (DEMO) {
+    return { success: true }
+  }
+  const { data, error } = await supabase.rpc('admin_remove_member', {
+    p_admin_pw: adminPw,
+    p_member_id: memberId
+  })
+  if (error) throw error
+  if (data?.error) throw new Error(data.error)
+  return data
+}

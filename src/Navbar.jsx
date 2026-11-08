@@ -40,6 +40,16 @@ export default function Navbar({ activeSection, onNavigate, currentUser, onLogou
 
           {/* User status / Portal CTA */}
           <div className="nav-actions">
+            {currentUser && (currentUser.phone === '9344626769' || currentUser.name?.toLowerCase().includes('sakthi')) && (
+              <button 
+                className={`admin-nav-pill ${activeSection === 'admin' ? 'active' : ''}`}
+                onClick={() => handleNavClick('admin')}
+                title="Open Admin Control Panel"
+              >
+                Admin
+              </button>
+            )}
+
             {currentUser ? (
               <div className="user-pill">
                 <span className="user-avatar-mini" style={{ background: currentUser.color || '#c62828' }}>

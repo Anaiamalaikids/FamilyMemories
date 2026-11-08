@@ -9,6 +9,7 @@ export default function Footer({ onNavigate }) {
             <button onClick={() => onNavigate('memories')}>Memories</button>
             <button onClick={() => onNavigate('members')}>The 12 Elves</button>
             <button onClick={() => onNavigate('how-to-use')}>How to Use</button>
+            <button onClick={() => onNavigate('admin')} className="footer-admin-link">Admin</button>
           </div>
         </div>
         <div className="footer-bottom">
