@@ -21,7 +21,7 @@ create table members (
 
 alter table members enable row level security;     -- no policies: public key can't read directly
 
--- 4. Create the secure login and draw function
+-- 4. Create the secure login and draw function with relationship weighting
 create or replace function santa_login(p_phone text, p_password text)
 returns json language plpgsql security definer set search_path = public, extensions as $$
 declare me members; t members; cand uuid; other uuid; undrawn int;
@@ -39,7 +39,17 @@ begin
        and not exists (select 1 from members x where x.giving_to = c.id)        -- not already assigned
        and (undrawn <> 2 or c.id = other                                        -- avoid a dead end:
             or exists (select 1 from members x where x.giving_to = other))      -- last giver never left with themselves
-     order by random() limit 1;
+     order by 
+       -ln(greatest(random(), 0.00001)) / 
+       case 
+         -- 70% reduced probability (0.30 weight) for close siblings / cousin pairs:
+         when (me.name = 'Aadhi' and c.name = 'Sakthi') or (me.name = 'Sakthi' and c.name = 'Aadhi') then 0.30
+         when (me.name = 'Aadhu' and c.name = 'Sarath Vikram') or (me.name = 'Sarath Vikram' and c.name = 'Aadhu') then 0.30
+         when (me.name = 'Swarna Akshita' and c.name = 'Shruthi') or (me.name = 'Shruthi' and c.name = 'Swarna Akshita') then 0.30
+         else 1.00
+       end
+     limit 1;
+
     update members set giving_to = cand where id = me.id;
     me.giving_to := cand;
   end if;
@@ -51,11 +61,10 @@ end $$;
 
 grant execute on function santa_login(text, text) to anon;
 
--- 5. Seed all 12 Family Members with encrypted passwords in order (Sre Nithi #11, Sakthi #12)
+-- 5. Seed the 11 Active Family Members (Hari Krishnan removed as requested)
 insert into members (name, phone, password_hash, photo_url) values
   ('Aadhi', '9361386647', crypt('sakthikarthikadithya', gen_salt('bf')), '/elves/aadhi.jpg'),
   ('Sreedharan Kandavel', '6383659695', crypt('jeffnippard', gen_salt('bf')), '/elves/sreedharan.jpg'),
-  ('Harikrishnan', '7695898730', crypt('harik1338', gen_salt('bf')), '/elves/harikrishnan.jpg'),
   ('Brinda', '9344858175', crypt('brindakumar', gen_salt('bf')), '/elves/brinda.jpg'),
   ('Sathya', '9080636525', crypt('saththikumar', gen_salt('bf')), '/elves/sathya.jpg'),
   ('Shruthi', '7010151872', crypt('suruthijoke', gen_salt('bf')), '/elves/shruthi.jpg'),

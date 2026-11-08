@@ -8,7 +8,6 @@
 const MEMBERS = [
   { name: 'Aadhi', phone: '9361386647' },
   { name: 'Sreedharan Kandavel', phone: '6383659695' },
-  { name: 'Harikrishnan', phone: '7695898730' },
   { name: 'Brinda', phone: '9344858175' },
   { name: 'Sathya', phone: '9080636525' },
   { name: 'Shruthi', phone: '7010151872' },
