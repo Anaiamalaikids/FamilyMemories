@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import { MEMBERS, createHolidayAvatar } from './membersData.js'
 
-const url = import.meta.env.VITE_SUPABASE_URL
+const rawUrl = import.meta.env.VITE_SUPABASE_URL
+const url = rawUrl ? rawUrl.trim().replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '') : null
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const DEMO = !url || !key
 const supabase = DEMO ? null : createClient(url, key)
@@ -84,7 +85,19 @@ export async function login(phone, password) {
     return demoLogin(phone, password)
   }
   
-  const { data, error } = await supabase.rpc('santa_login', { p_phone: phone, p_password: password })
+  const cleanPhone = phone.trim().replace(/\D/g, '')
+  const { data, error } = await supabase.rpc('santa_login', { p_phone: cleanPhone, p_password: password })
   if (error) throw error
-  return data
+  if (!data) return null
+
+  const targetMember = MEMBERS.find(m => m.name === data.target?.name)
+  const targetPhoto = data.target?.photo || (targetMember ? createHolidayAvatar(targetMember.name, targetMember.color) : '/santa_shh.jpg')
+
+  return {
+    ...data,
+    target: {
+      ...data.target,
+      photo: targetPhoto
+    }
+  }
 }
