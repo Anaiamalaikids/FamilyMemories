@@ -63,5 +63,5 @@ insert into members (name, phone, password_hash, photo_url) values
   ('Sailoga Prakash', '6382896498', crypt('powerstar', gen_salt('bf')), '/elves/sailoga.jpg'),
   ('Aadhu', '6383335626', crypt('aadhuiiii', gen_salt('bf')), '/elves/aadhu.jpg'),
   ('Sarath Vikram', '7010043287', crypt('sree anna', gen_salt('bf')), '/elves/sarath.jpg'),
-  ('Sre Nithi', '9000000011', crypt('srenithi2026', gen_salt('bf')), '/elves/srenithi.jpg'),
+  ('Srenithi', '9080369299', crypt('srenithi2026', gen_salt('bf')), '/elves/srenithi.jpg'),
   ('Sakthi', '9344626769', crypt('adminlogin', gen_salt('bf')), '/elves/sakthi.jpg');

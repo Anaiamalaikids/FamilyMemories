@@ -90,7 +90,7 @@ export async function login(phone, password) {
   if (error) throw error
   if (!data) return null
 
-  const targetMember = MEMBERS.find(m => m.name === data.target?.name)
+  const targetMember = MEMBERS.find(m => m.name.toLowerCase() === data.target?.name?.toLowerCase())
   const targetPhoto = data.target?.photo || (targetMember ? createHolidayAvatar(targetMember.name, targetMember.color) : '/santa_shh.jpg')
 
   return {

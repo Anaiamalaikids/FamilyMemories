@@ -11,7 +11,7 @@ export default function Santa({ x, hideEyes, isAngry }) {
       {isAngry && (
         <div className="santa-speech-bubble" role="alert">
           <span className="bubble-icon">💢</span>
-          <span className="bubble-text">Ho ho ho! Wrong credentials! Make it as per the admin gave you, idiot!</span>
+          <span className="bubble-text">Wrong credentials! Make it as per the admin gave you, idiot!</span>
           <span className="bubble-tail" />
         </div>
       )}
