@@ -21,6 +21,10 @@ export default function Login({ onDone }) {
 
   // Santa follows pointer / touch
   useEffect(() => {
+    // If mobile, ensure ambient video is paused to dedicate hardware decoder to main video
+    if (window.innerWidth <= 900 && ambientVideoRef.current) {
+      ambientVideoRef.current.pause();
+    }
     const move = (e) => {
       const p = e.touches ? e.touches[0] : e;
       setX(Math.max(-1, Math.min(1, (p.clientX / window.innerWidth) * 2 - 1)));
@@ -183,6 +187,7 @@ export default function Login({ onDone }) {
                   ref={videoRef}
                   className="showcase-video"
                   src="/sree.mp4"
+                  preload="auto"
                   autoPlay
                   muted={isMuted}
                   playsInline
