@@ -21,6 +21,7 @@ export default function AdminPanel({ currentUser, onExit }) {
   // Modals state
   const [showAddModal, setShowAddModal] = useState(false)
   const [showResetAllModal, setShowResetAllModal] = useState(false)
+  const [showReminderModal, setShowReminderModal] = useState(false)
   const [memberToDelete, setMemberToDelete] = useState(null)
   const [memberToReset, setMemberToReset] = useState(null)
 
@@ -140,6 +141,25 @@ export default function AdminPanel({ currentUser, onExit }) {
 
   const drawnCount = members.filter((m) => m.has_drawn).length
   const pendingCount = members.length - drawnCount
+
+  const getDaysLeft = () => {
+    const now = new Date()
+    const christmas = new Date(now.getFullYear(), 11, 25, 0, 0, 0)
+    if (now > christmas) christmas.setFullYear(now.getFullYear() + 1)
+    const diffTime = christmas - now
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  }
+
+  const getReminderMsg = (name) => {
+    const days = getDaysLeft()
+    return `Hey ${name}! Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
+  }
+
+  const sendWhatsApp = (member) => {
+    const text = getReminderMsg(member.name)
+    const url = `https://wa.me/91${member.phone}?text=${encodeURIComponent(text)}`
+    window.open(url, '_blank')
+  }
 
   const filteredMembers = members.filter((m) => {
     const q = search.toLowerCase().trim()
@@ -267,6 +287,13 @@ export default function AdminPanel({ currentUser, onExit }) {
                   + Add Member
                 </button>
                 <button
+                  className="admin-btn whatsapp-btn"
+                  onClick={() => setShowReminderModal(true)}
+                  title="Open Monday 2:00 PM WhatsApp Reminders"
+                >
+                  📱 WhatsApp Reminders
+                </button>
+                <button
                   className="admin-btn danger"
                   onClick={() => setShowResetAllModal(true)}
                   disabled={loading}
@@ -310,6 +337,13 @@ export default function AdminPanel({ currentUser, onExit }) {
                   </div>
 
                   <div className="member-card-footer">
+                    <button
+                      className="card-action-btn remind"
+                      onClick={() => sendWhatsApp(m)}
+                      title={`Send WhatsApp reminder to ${m.name}`}
+                    >
+                      📲 Remind
+                    </button>
                     {m.has_drawn && (
                       <button
                         className="card-action-btn reset"
@@ -511,6 +545,58 @@ export default function AdminPanel({ currentUser, onExit }) {
                   disabled={loading}
                 >
                   {loading ? 'Removing...' : 'Delete Member'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL: Monday WhatsApp Reminders Broadcast */}
+        {showReminderModal && (
+          <div className="admin-modal-backdrop" onClick={() => setShowReminderModal(false)}>
+            <div className="admin-modal-card reminder-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <div>
+                  <h3 style={{ margin: 0, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>📱</span> Monday 2:00 PM WhatsApp Broadcast
+                  </h3>
+                  <p style={{ margin: '0.3rem 0 0', fontSize: '0.82rem', color: 'var(--gold)' }}>
+                    Countdown: <strong>{getDaysLeft()} days left</strong> until Christmas Reveal
+                  </p>
+                </div>
+                <button className="modal-close-btn" onClick={() => setShowReminderModal(false)}>
+                  ✕
+                </button>
+              </div>
+
+              <div className="reminder-preview-box">
+                <span className="preview-label">Live Message Preview:</span>
+                <p className="preview-text">{getReminderMsg('{Name}')}</p>
+              </div>
+
+              <div className="reminder-members-list">
+                {members.map((m) => (
+                  <div key={m.id} className="reminder-member-row">
+                    <div className="reminder-member-info">
+                      <span className="reminder-name">{m.name}</span>
+                      <span className="reminder-phone">📞 {m.phone}</span>
+                    </div>
+                    <button
+                      className="admin-btn whatsapp-send-btn"
+                      onClick={() => sendWhatsApp(m)}
+                    >
+                      Open WhatsApp ↗
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="modal-actions" style={{ marginTop: '1.2rem' }}>
+                <button
+                  className="admin-btn secondary"
+                  onClick={() => setShowReminderModal(false)}
+                >
+                  Close
                 </button>
               </div>
             </div>

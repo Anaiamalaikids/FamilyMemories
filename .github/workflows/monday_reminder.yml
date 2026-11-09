@@ -1,0 +1,25 @@
+name: Monday Secret Santa Reminder
+
+on:
+  schedule:
+    # Runs every Monday at 08:30 UTC = 2:00 PM IST (Indian Standard Time)
+    - cron: '30 8 * * 1'
+  workflow_dispatch: # Allows manual 1-click trigger from GitHub Actions tab
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Monday Reminder Script
+        env:
+          ULTRAMSG_INSTANCE_ID: ${{ secrets.ULTRAMSG_INSTANCE_ID }}
+          ULTRAMSG_TOKEN: ${{ secrets.ULTRAMSG_TOKEN }}
+        run: node scripts/send_monday_reminder.js
