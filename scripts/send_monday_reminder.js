@@ -79,6 +79,10 @@ async function run() {
       try {
         const sent = await sendViaUltraMsg(m.phone, msg)
         console.log(`[${i + 1}/${MEMBERS.length}] Sent to ${m.name} (${m.phone}): ${sent ? '✅ SUCCESS' : '❌ FAILED'}`)
+        // Polite 3-second delay between messages to stay completely under WhatsApp anti-spam radar
+        if (i < MEMBERS.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 3000))
+        }
       } catch (err) {
         console.error(`[${i + 1}/${MEMBERS.length}] Error sending to ${m.name}:`, err.message)
       }
