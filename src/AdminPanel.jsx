@@ -25,6 +25,9 @@ export default function AdminPanel({ currentUser, onExit }) {
   const [memberToDelete, setMemberToDelete] = useState(null)
   const [memberToReset, setMemberToReset] = useState(null)
 
+  // Spoiler Shield for Admin Sakthi (keep all targets blurred by default!)
+  const [revealedSpoilers, setRevealedSpoilers] = useState({})
+
   // Add form fields
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
@@ -289,6 +292,46 @@ export default function AdminPanel({ currentUser, onExit }) {
               </div>
             </div>
 
+            {/* PROMINENT WHATSAPP BROADCAST HERO CARD */}
+            <div className="admin-broadcast-hero">
+              <div className="broadcast-hero-content">
+                <div className="broadcast-hero-top-badge">
+                  <span className="live-pulse" /> 📱 MONDAY 2:00 PM WHATSAPP BROADCAST
+                </div>
+                <h2 className="broadcast-hero-title">Secret Santa WhatsApp Reminders</h2>
+                <p className="broadcast-hero-subtitle">
+                  Remind all 11 family members in 1 click! Dynamic countdown: <strong>{getDaysLeft()} days left</strong> until Christmas Reveal
+                </p>
+                <div className="broadcast-hero-message-box">
+                  <span className="hero-msg-label">Live Message Preview:</span>
+                  <p className="hero-msg-text">"{getReminderMsg('{Name}')}"</p>
+                </div>
+              </div>
+              <div className="broadcast-hero-actions">
+                <button
+                  className="admin-btn hero-whatsapp-btn"
+                  onClick={handleBroadcastShare}
+                  title="Share to all on WhatsApp"
+                >
+                  🚀 Send to Everyone (1-Click)
+                </button>
+                <button
+                  className="admin-btn hero-copy-btn"
+                  onClick={handleCopyBroadcast}
+                  title="Copy message to clipboard"
+                >
+                  📋 Copy Message
+                </button>
+                <button
+                  className="admin-btn hero-modal-btn"
+                  onClick={() => setShowReminderModal(true)}
+                  title="View individual members list"
+                >
+                  👥 Individual Links
+                </button>
+              </div>
+            </div>
+
             {/* Quick Actions Bar */}
             <div className="admin-actions-bar">
               <div className="search-box">
@@ -356,7 +399,30 @@ export default function AdminPanel({ currentUser, onExit }) {
                     {m.has_drawn ? (
                       <div className="status-badge drawn">
                         <span className="status-dot green" />
-                        <span>Gifting: <strong>{m.target_name || 'Assigned'}</strong></span>
+                        <div className="drawn-content-shield">
+                          <span className="drawn-status-title">Draw Completed:</span>
+                          {revealedSpoilers[m.id] ? (
+                            <div className="spoiler-revealed-row">
+                              <span>Gifting: <strong className="unblurred-target">{m.target_name || 'Assigned'}</strong></span>
+                              <button
+                                className="spoiler-hide-btn"
+                                onClick={() => setRevealedSpoilers(prev => ({ ...prev, [m.id]: false }))}
+                                title="Blur target again"
+                              >
+                                🔒 Hide
+                              </button>
+                            </div>
+                          ) : (
+                            <div
+                              className="spoiler-shield-badge"
+                              onClick={() => setRevealedSpoilers(prev => ({ ...prev, [m.id]: true }))}
+                              title="Tap to unblur (Admin Peek)"
+                            >
+                              <span className="shield-lock-text">🔒 Will be revealed at New Year 🎁</span>
+                              <span className="shield-peek-hint">(tap to peek)</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ) : (
                       <div className="status-badge pending">
@@ -523,8 +589,8 @@ export default function AdminPanel({ currentUser, onExit }) {
               </div>
 
               <p className="modal-body-text">
-                Currently gifting <strong>{memberToReset.target_name || 'someone'}</strong>.
-                Resetting will clear their target so they can draw again.
+                This member has completed their draw (match is locked and secret).
+                Resetting will clear their assignment so they can draw again.
               </p>
 
               <div className="modal-actions">

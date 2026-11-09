@@ -3521,6 +3521,199 @@ input:focus, select:focus, textarea:focus {
   margin-bottom: 0.5rem;
 }
 
+/* Broadcast Hero Card */
+.admin-broadcast-hero {
+  background: linear-gradient(135deg, rgba(18, 140, 126, 0.28) 0%, rgba(37, 211, 102, 0.14) 100%);
+  border: 1px solid rgba(37, 211, 102, 0.45);
+  border-radius: 1.2rem;
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.broadcast-hero-top-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(37, 211, 102, 0.2);
+  border: 1px solid rgba(37, 211, 102, 0.4);
+  color: #25d366;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.75rem;
+  border-radius: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.broadcast-hero-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.3rem;
+}
+
+.broadcast-hero-subtitle {
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  margin: 0 0 0.7rem;
+}
+
+.broadcast-hero-subtitle strong {
+  color: var(--gold);
+}
+
+.broadcast-hero-message-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.hero-msg-label {
+  display: block;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.hero-msg-text {
+  font-size: 0.88rem;
+  color: #f5f5f5;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.broadcast-hero-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.hero-whatsapp-btn {
+  flex: 2 1 220px;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  color: #fff !important;
+  font-size: 0.96rem !important;
+  font-weight: 800 !important;
+  padding: 0.85rem 1.4rem !important;
+  border-radius: 0.8rem !important;
+  border: none !important;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45) !important;
+  cursor: pointer;
+}
+
+.hero-whatsapp-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.6) !important;
+}
+
+.hero-copy-btn {
+  flex: 1 1 150px;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  font-size: 0.86rem !important;
+  padding: 0.85rem 1rem !important;
+  border-radius: 0.8rem !important;
+  cursor: pointer;
+}
+
+.hero-modal-btn {
+  flex: 1 1 150px;
+  background: rgba(246, 196, 83, 0.12) !important;
+  color: var(--gold) !important;
+  border: 1px solid rgba(246, 196, 83, 0.35) !important;
+  font-size: 0.86rem !important;
+  padding: 0.85rem 1rem !important;
+  border-radius: 0.8rem !important;
+  cursor: pointer;
+}
+
+/* Spoiler Shield Styles */
+.drawn-content-shield {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.drawn-status-title {
+  font-size: 0.74rem;
+  color: #81c784;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.spoiler-shield-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(246, 196, 83, 0.12);
+  border: 1px dashed rgba(246, 196, 83, 0.45);
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.spoiler-shield-badge:hover {
+  background: rgba(246, 196, 83, 0.22);
+  border-style: solid;
+}
+
+.shield-lock-text {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.shield-peek-hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.spoiler-revealed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.86rem;
+  color: #fff;
+}
+
+.unblurred-target {
+  color: var(--gold);
+  font-weight: 800;
+  background: rgba(246, 196, 83, 0.15);
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.4rem;
+}
+
+.spoiler-hide-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.spoiler-hide-btn:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+
 
 
 

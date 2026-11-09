@@ -40,15 +40,13 @@ export default function Navbar({ activeSection, onNavigate, currentUser, onLogou
 
           {/* User status / Portal CTA */}
           <div className="nav-actions">
-            {currentUser && (currentUser.phone === '9344626769' || currentUser.name?.toLowerCase().includes('sakthi')) && (
-              <button 
-                className={`admin-nav-pill ${activeSection === 'admin' ? 'active' : ''}`}
-                onClick={() => handleNavClick('admin')}
-                title="Open Admin Control Panel"
-              >
-                Admin
-              </button>
-            )}
+            <button 
+              className={`admin-nav-pill ${activeSection === 'admin' ? 'active' : ''}`}
+              onClick={() => handleNavClick('admin')}
+              title="Open Admin Control Panel & WhatsApp Broadcast"
+            >
+              ⚙️ Admin
+            </button>
 
             {currentUser ? (
               <div className="user-pill">
@@ -80,6 +78,12 @@ export default function Navbar({ activeSection, onNavigate, currentUser, onLogou
                 <span className="ribbon-label">{item.label}</span>
               </button>
             ))}
+            <button
+              className={`ribbon-tab-btn ${activeSection === 'admin' ? 'active' : ''}`}
+              onClick={() => handleNavClick('admin')}
+            >
+              <span className="ribbon-label">Admin ⚙️</span>
+            </button>
           </div>
         </div>
       </nav>
