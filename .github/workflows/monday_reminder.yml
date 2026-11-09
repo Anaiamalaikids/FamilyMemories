@@ -20,6 +20,8 @@ jobs:
 
       - name: Run Monday Reminder Script
         env:
+          GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
+          GREEN_API_TOKEN: ${{ secrets.GREEN_API_TOKEN }}
           ULTRAMSG_INSTANCE_ID: ${{ secrets.ULTRAMSG_INSTANCE_ID }}
           ULTRAMSG_TOKEN: ${{ secrets.ULTRAMSG_TOKEN }}
         run: node scripts/send_monday_reminder.js

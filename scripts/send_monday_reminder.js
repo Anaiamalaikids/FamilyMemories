@@ -56,6 +56,23 @@ async function sendViaUltraMsg(phone, message) {
   return json.sent === 'true' || json.status === 'ok'
 }
 
+async function sendViaGreenApi(phone, message) {
+  const instanceId = process.env.GREEN_API_INSTANCE_ID
+  const token = process.env.GREEN_API_TOKEN
+  if (!instanceId || !token) return false
+
+  const res = await fetch(`https://api.green-api.com/waInstance${instanceId}/sendMessage/${token}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chatId: `91${phone}@c.us`,
+      message: message
+    })
+  })
+  const json = await res.json()
+  return !!json.idMessage
+}
+
 async function run() {
   console.log('='.repeat(70))
   console.log('🎄 SECRET SANTA MONDAY 2:00 PM AUTOMATED REMINDER 🎄')
@@ -64,9 +81,14 @@ async function run() {
   const days = getCountdownDays()
   console.log(`\n📅 Days remaining until Christmas Gift Handover: ${days} days\n`)
 
-  const hasApi = !!(process.env.ULTRAMSG_INSTANCE_ID && process.env.ULTRAMSG_TOKEN)
-  if (hasApi) {
-    console.log('🚀 Automated Cloud WhatsApp API detected! Dispatching messages...')
+  const hasGreenApi = !!(process.env.GREEN_API_INSTANCE_ID && process.env.GREEN_API_TOKEN)
+  const hasUltraMsg = !!(process.env.ULTRAMSG_INSTANCE_ID && process.env.ULTRAMSG_TOKEN)
+  const hasApi = hasGreenApi || hasUltraMsg
+
+  if (hasGreenApi) {
+    console.log('🚀 Green-API Cloud WhatsApp detected! Dispatching messages...')
+  } else if (hasUltraMsg) {
+    console.log('🚀 UltraMsg Cloud WhatsApp detected! Dispatching messages...')
   } else {
     console.log('ℹ️  No WhatsApp API gateway keys configured. Generating direct 1-click WhatsApp links:\n')
   }
@@ -77,7 +99,12 @@ async function run() {
 
     if (hasApi) {
       try {
-        const sent = await sendViaUltraMsg(m.phone, msg)
+        let sent = false
+        if (hasGreenApi) {
+          sent = await sendViaGreenApi(m.phone, msg)
+        } else if (hasUltraMsg) {
+          sent = await sendViaUltraMsg(m.phone, msg)
+        }
         console.log(`[${i + 1}/${MEMBERS.length}] Sent to ${m.name} (${m.phone}): ${sent ? '✅ SUCCESS' : '❌ FAILED'}`)
         // Polite 3-second delay between messages to stay completely under WhatsApp anti-spam radar
         if (i < MEMBERS.length - 1) {
