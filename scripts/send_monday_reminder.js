@@ -13,7 +13,8 @@ const MEMBERS = [
   { name: 'Aadhi', phone: '9361386647' },
   { name: 'Sreedharan Kandavel', phone: '6383659695' },
   { name: 'Brinda', phone: '9344858175' },
-  { name: 'Sathya', phone: '9080636525' },
+  // Sathya: Login remains 9080636525, but WhatsApp notifications go to 9585021410
+  { name: 'Sathya', phone: '9080636525', whatsappPhone: '9585021410' },
   { name: 'Shruthi', phone: '7010151872' },
   { name: 'Swarna Akshita', phone: '7812854115' },
   { name: 'Sailoga Prakash', phone: '6382896498' },
@@ -95,17 +96,18 @@ async function run() {
 
   for (let i = 0; i < MEMBERS.length; i++) {
     const m = MEMBERS[i]
+    const targetPhone = m.whatsappPhone || m.phone
     const msg = generateReminderMessage(m, days)
 
     if (hasApi) {
       try {
         let sent = false
         if (hasGreenApi) {
-          sent = await sendViaGreenApi(m.phone, msg)
+          sent = await sendViaGreenApi(targetPhone, msg)
         } else if (hasUltraMsg) {
-          sent = await sendViaUltraMsg(m.phone, msg)
+          sent = await sendViaUltraMsg(targetPhone, msg)
         }
-        console.log(`[${i + 1}/${MEMBERS.length}] Sent to ${m.name} (${m.phone}): ${sent ? '✅ SUCCESS' : '❌ FAILED'}`)
+        console.log(`[${i + 1}/${MEMBERS.length}] Sent to ${m.name} (WhatsApp: ${targetPhone}): ${sent ? '✅ SUCCESS' : '❌ FAILED'}`)
         // Polite 3-second delay between messages to stay completely under WhatsApp anti-spam radar
         if (i < MEMBERS.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 3000))
@@ -115,8 +117,8 @@ async function run() {
       }
     } else {
       const encodedMsg = encodeURIComponent(msg)
-      const waUrl = `https://wa.me/91${m.phone}?text=${encodedMsg}`
-      console.log(`[${i + 1}/${MEMBERS.length}] ${m.name} (${m.phone})`)
+      const waUrl = `https://wa.me/91${targetPhone}?text=${encodedMsg}`
+      console.log(`[${i + 1}/${MEMBERS.length}] ${m.name} (Login: ${m.phone}, WhatsApp: ${targetPhone})`)
       console.log(`👉 WhatsApp Link: ${waUrl}\n`)
     }
   }

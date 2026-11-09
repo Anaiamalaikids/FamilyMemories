@@ -63,6 +63,7 @@ export const MEMBERS = [
     subtitle: 'The Senior With a Junior Look',
     badge: 'Senior Sixth Grader',
     phone: '9080636525',
+    whatsappPhone: '9585021410',
     bio: "Almost the senior-most member of the gang, but somehow looks like she's still studying in sixth grade! The only giveaway of her actual seniority is the occasional appearance of white hair, reminding everyone that age and appearance are two completely different departments. She has a special talent for scolding people with such intensity that everyone is supposed to be scared. Unfortunately, her anger is so unintentionally funny that people struggle to take her seriously.",
     quote: 'A senior by experience, a sixth grader by appearance, and a comedy show whenever she gets angry!',
     color: '#d81b60',

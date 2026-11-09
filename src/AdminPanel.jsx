@@ -158,40 +158,35 @@ export default function AdminPanel({ currentUser, onExit }) {
     return `Hey ${name}! Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
   }
 
-  const sendWhatsApp = (member) => {
-    const text = getReminderMsg(member.name)
-    const url = `https://wa.me/91${member.phone}?text=${encodeURIComponent(text)}`
-    window.open(url, '_blank')
+  const getMemberWhatsAppPhone = (member) => {
+    // Sathya's login remains 9080636525, but WhatsApp goes to 9585021410
+    if (member.name?.toLowerCase().includes('sathya') || member.phone === '9080636525') {
+      return '9585021410'
+    }
+    return member.whatsappPhone || member.phone
   }
 
-  const handleBroadcastShare = async () => {
+  const sendWhatsApp = (member) => {
+    const phone = getMemberWhatsAppPhone(member)
+    const text = getReminderMsg(member.name)
+    // whatsapp:// custom URI scheme forces Android/MIUI to prompt: "Open with WhatsApp or Dual WhatsApp (Clone)"
+    const deepUrl = `whatsapp://send?phone=91${phone}&text=${encodeURIComponent(text)}`
+    window.location.href = deepUrl
+  }
+
+  const handleBroadcastShare = () => {
     const days = getDaysLeft()
     const text = `Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Secret Santa Reminder',
-          text: text,
-        })
-        showToast('Shared to WhatsApp successfully!', 'success')
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          navigator.clipboard.writeText(text)
-          showToast('Copied to clipboard! Open WhatsApp and paste.', 'success')
-        }
-      }
-    } else {
-      navigator.clipboard.writeText(text)
-      showToast('Copied to clipboard! Open WhatsApp and paste into Broadcast List.', 'success')
-    }
+    // whatsapp:// custom URI triggers Xiaomi Dual App / App Clone picker!
+    window.location.href = `whatsapp://send?text=${encodeURIComponent(text)}`
   }
 
   const handleCopyBroadcast = () => {
     const days = getDaysLeft()
     const text = `Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
     navigator.clipboard.writeText(text)
-    showToast('Message copied! Open WhatsApp Broadcast List and paste.', 'success')
+    showToast('Message copied! Open your WhatsApp Clone and paste into Broadcast List.', 'success')
   }
 
   const filteredMembers = members.filter((m) => {
@@ -391,7 +386,13 @@ export default function AdminPanel({ currentUser, onExit }) {
                     />
                     <div className="member-details">
                       <h3 className="admin-member-name">{m.name}</h3>
-                      <span className="admin-member-phone">📞 {m.phone}</span>
+                      <span className="admin-member-phone">
+                        {getMemberWhatsAppPhone(m) !== m.phone ? (
+                          <>📞 Login: {m.phone} | <strong style={{ color: '#25d366' }}>💬 WA: {getMemberWhatsAppPhone(m)}</strong></>
+                        ) : (
+                          <>📞 {m.phone}</>
+                        )}
+                      </span>
                     </div>
                   </div>
 
@@ -703,7 +704,13 @@ export default function AdminPanel({ currentUser, onExit }) {
                   <div key={m.id} className="reminder-member-row">
                     <div className="reminder-member-info">
                       <span className="reminder-name">{m.name}</span>
-                      <span className="reminder-phone">📞 {m.phone}</span>
+                      <span className="reminder-phone">
+                        {getMemberWhatsAppPhone(m) !== m.phone ? (
+                          <>Login: {m.phone} | <strong style={{ color: '#25d366' }}>WA: {getMemberWhatsAppPhone(m)}</strong></>
+                        ) : (
+                          <>📞 {m.phone}</>
+                        )}
+                      </span>
                     </div>
                     <button
                       className="admin-btn whatsapp-send-btn"
