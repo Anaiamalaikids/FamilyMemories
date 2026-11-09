@@ -161,6 +161,36 @@ export default function AdminPanel({ currentUser, onExit }) {
     window.open(url, '_blank')
   }
 
+  const handleBroadcastShare = async () => {
+    const days = getDaysLeft()
+    const text = `Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Secret Santa Reminder',
+          text: text,
+        })
+        showToast('Shared to WhatsApp successfully!', 'success')
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          navigator.clipboard.writeText(text)
+          showToast('Copied to clipboard! Open WhatsApp and paste.', 'success')
+        }
+      }
+    } else {
+      navigator.clipboard.writeText(text)
+      showToast('Copied to clipboard! Open WhatsApp and paste into Broadcast List.', 'success')
+    }
+  }
+
+  const handleCopyBroadcast = () => {
+    const days = getDaysLeft()
+    const text = `Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
+    navigator.clipboard.writeText(text)
+    showToast('Message copied! Open WhatsApp Broadcast List and paste.', 'success')
+  }
+
   const filteredMembers = members.filter((m) => {
     const q = search.toLowerCase().trim()
     if (!q) return true
@@ -572,6 +602,34 @@ export default function AdminPanel({ currentUser, onExit }) {
               <div className="reminder-preview-box">
                 <span className="preview-label">Live Message Preview:</span>
                 <p className="preview-text">{getReminderMsg('{Name}')}</p>
+              </div>
+
+              {/* 1-Click Broadcast Actions */}
+              <div className="broadcast-quick-actions">
+                <button
+                  className="admin-btn whatsapp-broadcast-all-btn"
+                  onClick={handleBroadcastShare}
+                >
+                  🚀 Send to Everyone (1-Click)
+                </button>
+                <button
+                  className="admin-btn copy-broadcast-btn"
+                  onClick={handleCopyBroadcast}
+                >
+                  📋 Copy Message for Broadcast List
+                </button>
+              </div>
+
+              <div className="broadcast-tip-card">
+                <strong>💡 Send to All in 1 Click via WhatsApp:</strong>
+                <p>
+                  In your mobile WhatsApp: Tap <strong>⋮ Menu → New Broadcast</strong>, select your 11 family members, and name it <em>Secret Santa 2026</em>.
+                  Now tapping <strong>"Send to Everyone"</strong> or pasting there delivers this message to all 11 people individually in one single click!
+                </p>
+              </div>
+
+              <div className="reminder-list-header">
+                <span>Or message members individually:</span>
               </div>
 
               <div className="reminder-members-list">
