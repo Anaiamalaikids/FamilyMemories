@@ -96,6 +96,27 @@ async function sendViaTwilio(formattedPhone, message) {
   return !!json.sid
 }
 
+async function sendViaWbizTool(formattedPhone, message) {
+  const apiKey = process.env.WBIZTOOL_API_KEY
+  const clientId = process.env.WBIZTOOL_CLIENT_ID
+  if (!apiKey || !clientId) return false
+
+  const res = await fetch('https://wbiztool.com/api/v1/send_msg/', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      whatsapp_client: clientId,
+      phone: formattedPhone,
+      msg: message
+    })
+  })
+  const json = await res.json()
+  return json.status === 1 || json.status === '1'
+}
+
 async function sendViaUltraMsg(formattedPhone, message) {
   const instanceId = process.env.ULTRAMSG_INSTANCE_ID
   const token = process.env.ULTRAMSG_TOKEN
@@ -140,13 +161,16 @@ async function run() {
   const days = getCountdownDays()
   console.log(`\n📅 Days remaining until Christmas Gift Handover: ${days} days\n`)
 
+  const hasWbizTool = !!(process.env.WBIZTOOL_API_KEY && process.env.WBIZTOOL_CLIENT_ID)
   const hasMeta = !!(process.env.META_WA_TOKEN && process.env.META_WA_PHONE_ID)
   const hasTwilio = !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN)
   const hasGreenApi = !!(process.env.GREEN_API_INSTANCE_ID && process.env.GREEN_API_TOKEN)
   const hasUltraMsg = !!(process.env.ULTRAMSG_INSTANCE_ID && process.env.ULTRAMSG_TOKEN)
-  const hasApi = hasMeta || hasTwilio || hasGreenApi || hasUltraMsg
+  const hasApi = hasWbizTool || hasMeta || hasTwilio || hasGreenApi || hasUltraMsg
 
-  if (hasMeta) {
+  if (hasWbizTool) {
+    console.log('🚀 WbizTool Cloud WhatsApp detected! Dispatching messages...')
+  } else if (hasMeta) {
     console.log('🚀 Meta Official WhatsApp Cloud API detected! Dispatching messages...')
   } else if (hasTwilio) {
     console.log('🚀 Twilio WhatsApp API detected! Dispatching messages...')
@@ -166,7 +190,9 @@ async function run() {
     if (hasApi) {
       try {
         let sent = false
-        if (hasMeta) {
+        if (hasWbizTool) {
+          sent = await sendViaWbizTool(targetFormatted, msg)
+        } else if (hasMeta) {
           sent = await sendViaMetaCloud(targetFormatted, msg)
         } else if (hasTwilio) {
           sent = await sendViaTwilio(targetFormatted, msg)

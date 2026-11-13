@@ -20,6 +20,8 @@ jobs:
 
       - name: Run Monday Reminder Script
         env:
+          WBIZTOOL_API_KEY: ${{ secrets.WBIZTOOL_API_KEY }}
+          WBIZTOOL_CLIENT_ID: ${{ secrets.WBIZTOOL_CLIENT_ID }}
           META_WA_TOKEN: ${{ secrets.META_WA_TOKEN }}
           META_WA_PHONE_ID: ${{ secrets.META_WA_PHONE_ID }}
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
