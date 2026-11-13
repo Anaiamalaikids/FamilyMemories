@@ -25,6 +25,10 @@ export default function AdminPanel({ currentUser, onExit }) {
   const [memberToDelete, setMemberToDelete] = useState(null)
   const [memberToReset, setMemberToReset] = useState(null)
 
+  // Direct UltraMsg Triggering state
+  const [isTriggering, setIsTriggering] = useState(false)
+  const [triggerProgress, setTriggerProgress] = useState(null)
+
   // Spoiler Shield for Admin Sakthi (keep all targets blurred by default!)
   const [revealedSpoilers, setRevealedSpoilers] = useState({})
 
@@ -186,6 +190,81 @@ export default function AdminPanel({ currentUser, onExit }) {
     window.location.href = deepUrl
   }
 
+  const ULTRAMSG_INSTANCE = 'instance196853'
+  const ULTRAMSG_TOKEN = 'cpxlbznys1346tqg'
+
+  const sendDirectViaUltraMsg = async (formattedPhone, message) => {
+    const params = new URLSearchParams()
+    params.append('token', ULTRAMSG_TOKEN)
+    params.append('to', `+${formattedPhone}`)
+    params.append('body', message)
+
+    const res = await fetch(`https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params
+    })
+    const json = await res.json()
+    return json.sent === 'true' || json.status === 'ok' || json.id
+  }
+
+  const handleTriggerAll = async () => {
+    if (isTriggering) return
+    if (!window.confirm(`⚡ Trigger automated WhatsApp reminders to all ${members.length} family members via your connected WhatsApp now?`)) {
+      return
+    }
+
+    setIsTriggering(true)
+    let successCount = 0
+
+    for (let i = 0; i < members.length; i++) {
+      const m = members[i]
+      const rawPhone = getMemberWhatsAppPhone(m)
+      const formattedPhone = formatPhoneForLink(rawPhone)
+      const msg = getReminderMsg(m.name)
+
+      setTriggerProgress({
+        index: i + 1,
+        total: members.length,
+        name: m.name,
+        phone: formattedPhone
+      })
+
+      try {
+        const ok = await sendDirectViaUltraMsg(formattedPhone, msg)
+        if (ok) successCount++
+      } catch (err) {
+        console.error(`Error sending to ${m.name}:`, err)
+      }
+
+      if (i < members.length - 1) {
+        await new Promise(r => setTimeout(r, 2000))
+      }
+    }
+
+    setIsTriggering(false)
+    setTriggerProgress(null)
+    showToast(`⚡ Automated Broadcast Complete! Sent to ${successCount}/${members.length} members.`, 'success')
+  }
+
+  const handleTriggerSingle = async (member) => {
+    const rawPhone = getMemberWhatsAppPhone(member)
+    const formattedPhone = formatPhoneForLink(rawPhone)
+    const msg = getReminderMsg(member.name)
+    showToast(`Sending automated message to ${member.name}...`, 'info')
+
+    try {
+      const ok = await sendDirectViaUltraMsg(formattedPhone, msg)
+      if (ok) {
+        showToast(`✅ Successfully sent to ${member.name} (+${formattedPhone})!`, 'success')
+      } else {
+        showToast(`❌ Failed to send to ${member.name}. Check your connection.`, 'error')
+      }
+    } catch (err) {
+      showToast(`Error: ${err.message}`, 'error')
+    }
+  }
+
   const handleBroadcastShare = () => {
     const days = getDaysLeft()
     const text = `Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
@@ -316,11 +395,21 @@ export default function AdminPanel({ currentUser, onExit }) {
               </div>
               <div className="broadcast-hero-actions">
                 <button
+                  className="admin-btn hero-trigger-btn"
+                  onClick={handleTriggerAll}
+                  disabled={isTriggering}
+                  title="Trigger automated WhatsApp broadcast directly from your connected UltraMsg instance"
+                >
+                  {isTriggering
+                    ? `⚡ Sending (${triggerProgress?.index}/${triggerProgress?.total})...`
+                    : '⚡ Trigger Automated Broadcast Now'}
+                </button>
+                <button
                   className="admin-btn hero-whatsapp-btn"
                   onClick={handleBroadcastShare}
                   title="Share to all on WhatsApp"
                 >
-                  🚀 Send to Everyone (1-Click)
+                  🚀 Open WhatsApp Clone (1-Click)
                 </button>
                 <button
                   className="admin-btn hero-copy-btn"
@@ -337,6 +426,20 @@ export default function AdminPanel({ currentUser, onExit }) {
                   👥 Individual Links
                 </button>
               </div>
+
+              {triggerProgress && (
+                <div className="trigger-live-progress-card">
+                  <div className="trigger-spinner" />
+                  <div className="trigger-progress-info">
+                    <span className="trigger-progress-title">
+                      ⚡ Automated Broadcast in Progress ({triggerProgress.index} of {triggerProgress.total})
+                    </span>
+                    <span className="trigger-progress-desc">
+                      Sending reminder to <strong>{triggerProgress.name}</strong> (+{triggerProgress.phone})...
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Quick Actions Bar */}
@@ -447,11 +550,18 @@ export default function AdminPanel({ currentUser, onExit }) {
 
                   <div className="member-card-footer">
                     <button
+                      className="card-action-btn trigger-single"
+                      onClick={() => handleTriggerSingle(m)}
+                      title={`Send automated WhatsApp directly to ${m.name}`}
+                    >
+                      ⚡ Auto Send
+                    </button>
+                    <button
                       className="card-action-btn remind"
                       onClick={() => sendWhatsApp(m)}
-                      title={`Send WhatsApp reminder to ${m.name}`}
+                      title={`Open WhatsApp for ${m.name}`}
                     >
-                      📲 Remind
+                      📲 Open WA
                     </button>
                     {m.has_drawn && (
                       <button
