@@ -12,7 +12,8 @@
 const MEMBERS = [
   { name: 'Aadhi', phone: '9361386647' },
   { name: 'Sreedharan Kandavel', phone: '6383659695' },
-  { name: 'Brinda', phone: '9344858175' },
+  // Brinda: Login remains 9344858175, WhatsApp is +85298583878 (Hong Kong)
+  { name: 'Brinda', phone: '9344858175', whatsappPhone: '85298583878' },
   // Sathya: Login remains 9080636525, but WhatsApp notifications go to 9585021410
   { name: 'Sathya', phone: '9080636525', whatsappPhone: '9585021410' },
   { name: 'Shruthi', phone: '7010151872' },
@@ -38,14 +39,25 @@ function generateReminderMessage(member, daysLeft) {
   return `Hey ${member.name}! Don't forget to prepare for the gift just ${daysLeft} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
 }
 
-async function sendViaUltraMsg(phone, message) {
+function formatWhatsAppPhone(phone) {
+  const clean = phone.toString().replace(/\D/g, '')
+  if (clean.startsWith('852')) {
+    return clean
+  }
+  if (clean.length === 10) {
+    return `91${clean}`
+  }
+  return clean
+}
+
+async function sendViaUltraMsg(formattedPhone, message) {
   const instanceId = process.env.ULTRAMSG_INSTANCE_ID
   const token = process.env.ULTRAMSG_TOKEN
   if (!instanceId || !token) return false
 
   const params = new URLSearchParams()
   params.append('token', token)
-  params.append('to', `+91${phone}`)
+  params.append('to', `+${formattedPhone}`)
   params.append('body', message)
 
   const res = await fetch(`https://api.ultramsg.com/${instanceId}/messages/chat`, {
@@ -57,7 +69,7 @@ async function sendViaUltraMsg(phone, message) {
   return json.sent === 'true' || json.status === 'ok'
 }
 
-async function sendViaGreenApi(phone, message) {
+async function sendViaGreenApi(formattedPhone, message) {
   const instanceId = process.env.GREEN_API_INSTANCE_ID
   const token = process.env.GREEN_API_TOKEN
   if (!instanceId || !token) return false
@@ -66,7 +78,7 @@ async function sendViaGreenApi(phone, message) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      chatId: `91${phone}@c.us`,
+      chatId: `${formattedPhone}@c.us`,
       message: message
     })
   })
@@ -96,18 +108,18 @@ async function run() {
 
   for (let i = 0; i < MEMBERS.length; i++) {
     const m = MEMBERS[i]
-    const targetPhone = m.whatsappPhone || m.phone
+    const targetFormatted = formatWhatsAppPhone(m.whatsappPhone || m.phone)
     const msg = generateReminderMessage(m, days)
 
     if (hasApi) {
       try {
         let sent = false
         if (hasGreenApi) {
-          sent = await sendViaGreenApi(targetPhone, msg)
+          sent = await sendViaGreenApi(targetFormatted, msg)
         } else if (hasUltraMsg) {
-          sent = await sendViaUltraMsg(targetPhone, msg)
+          sent = await sendViaUltraMsg(targetFormatted, msg)
         }
-        console.log(`[${i + 1}/${MEMBERS.length}] Sent to ${m.name} (WhatsApp: ${targetPhone}): ${sent ? '✅ SUCCESS' : '❌ FAILED'}`)
+        console.log(`[${i + 1}/${MEMBERS.length}] Sent to ${m.name} (WhatsApp: +${targetFormatted}): ${sent ? '✅ SUCCESS' : '❌ FAILED'}`)
         // Polite 3-second delay between messages to stay completely under WhatsApp anti-spam radar
         if (i < MEMBERS.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 3000))
@@ -117,8 +129,8 @@ async function run() {
       }
     } else {
       const encodedMsg = encodeURIComponent(msg)
-      const waUrl = `https://wa.me/91${targetPhone}?text=${encodedMsg}`
-      console.log(`[${i + 1}/${MEMBERS.length}] ${m.name} (Login: ${m.phone}, WhatsApp: ${targetPhone})`)
+      const waUrl = `https://wa.me/${targetFormatted}?text=${encodedMsg}`
+      console.log(`[${i + 1}/${MEMBERS.length}] ${m.name} (Login: ${m.phone}, WhatsApp: +${targetFormatted})`)
       console.log(`👉 WhatsApp Link: ${waUrl}\n`)
     }
   }

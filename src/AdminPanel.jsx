@@ -159,6 +159,10 @@ export default function AdminPanel({ currentUser, onExit }) {
   }
 
   const getMemberWhatsAppPhone = (member) => {
+    // Brinda: Login remains 9344858175, WhatsApp is +85298583878 (Hong Kong)
+    if (member.name?.toLowerCase().includes('brinda') || member.phone === '9344858175') {
+      return '85298583878'
+    }
     // Sathya's login remains 9080636525, but WhatsApp goes to 9585021410
     if (member.name?.toLowerCase().includes('sathya') || member.phone === '9080636525') {
       return '9585021410'
@@ -166,11 +170,19 @@ export default function AdminPanel({ currentUser, onExit }) {
     return member.whatsappPhone || member.phone
   }
 
+  const formatPhoneForLink = (phone) => {
+    const clean = phone.toString().replace(/\D/g, '')
+    if (clean.startsWith('852')) return clean
+    if (clean.length === 10) return `91${clean}`
+    return clean
+  }
+
   const sendWhatsApp = (member) => {
-    const phone = getMemberWhatsAppPhone(member)
+    const rawPhone = getMemberWhatsAppPhone(member)
+    const formattedPhone = formatPhoneForLink(rawPhone)
     const text = getReminderMsg(member.name)
     // whatsapp:// custom URI scheme forces Android/MIUI to prompt: "Open with WhatsApp or Dual WhatsApp (Clone)"
-    const deepUrl = `whatsapp://send?phone=91${phone}&text=${encodeURIComponent(text)}`
+    const deepUrl = `whatsapp://send?phone=${formattedPhone}&text=${encodeURIComponent(text)}`
     window.location.href = deepUrl
   }
 

@@ -49,6 +49,7 @@ export const MEMBERS = [
     subtitle: "The Admin's Favourite",
     badge: "Admin's Favourite",
     phone: '9344858175',
+    whatsappPhone: '85298583878',
     bio: 'A kind, innocent soul who has mastered the art of being physically present but mentally somewhere else. She can attend an entire conversation without having the slightest clue about who is speaking or what the discussion is about. Her imagination is so powerful that she can create an entirely different universe in her mind and happily spend the whole day living in it. Reality, however, reminds her that she has approximately five hours of copy-paste responsibilities to complete before earning her salary.',
     quote: "Perfect in almost everything, effortlessly innocent and undoubtedly the admin's favourite!",
     color: '#8e24aa',
