@@ -50,6 +50,52 @@ function formatWhatsAppPhone(phone) {
   return clean
 }
 
+async function sendViaMetaCloud(formattedPhone, message) {
+  const token = process.env.META_WA_TOKEN
+  const phoneId = process.env.META_WA_PHONE_ID
+  if (!token || !phoneId) return false
+
+  const res = await fetch(`https://graph.facebook.com/v19.0/${phoneId}/messages`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: formattedPhone,
+      type: 'text',
+      text: { preview_url: true, body: message }
+    })
+  })
+  const json = await res.json()
+  return !!json.messages?.[0]?.id
+}
+
+async function sendViaTwilio(formattedPhone, message) {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID
+  const authToken = process.env.TWILIO_AUTH_TOKEN
+  const fromNumber = process.env.TWILIO_FROM || 'whatsapp:+14155238886'
+  if (!accountSid || !authToken) return false
+
+  const params = new URLSearchParams()
+  params.append('From', fromNumber)
+  params.append('To', `whatsapp:+${formattedPhone}`)
+  params.append('Body', message)
+
+  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(`${accountSid}:${authToken}`).toString('base64'),
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: params
+  })
+  const json = await res.json()
+  return !!json.sid
+}
+
 async function sendViaUltraMsg(formattedPhone, message) {
   const instanceId = process.env.ULTRAMSG_INSTANCE_ID
   const token = process.env.ULTRAMSG_TOKEN
@@ -94,11 +140,17 @@ async function run() {
   const days = getCountdownDays()
   console.log(`\n📅 Days remaining until Christmas Gift Handover: ${days} days\n`)
 
+  const hasMeta = !!(process.env.META_WA_TOKEN && process.env.META_WA_PHONE_ID)
+  const hasTwilio = !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN)
   const hasGreenApi = !!(process.env.GREEN_API_INSTANCE_ID && process.env.GREEN_API_TOKEN)
   const hasUltraMsg = !!(process.env.ULTRAMSG_INSTANCE_ID && process.env.ULTRAMSG_TOKEN)
-  const hasApi = hasGreenApi || hasUltraMsg
+  const hasApi = hasMeta || hasTwilio || hasGreenApi || hasUltraMsg
 
-  if (hasGreenApi) {
+  if (hasMeta) {
+    console.log('🚀 Meta Official WhatsApp Cloud API detected! Dispatching messages...')
+  } else if (hasTwilio) {
+    console.log('🚀 Twilio WhatsApp API detected! Dispatching messages...')
+  } else if (hasGreenApi) {
     console.log('🚀 Green-API Cloud WhatsApp detected! Dispatching messages...')
   } else if (hasUltraMsg) {
     console.log('🚀 UltraMsg Cloud WhatsApp detected! Dispatching messages...')
@@ -114,7 +166,11 @@ async function run() {
     if (hasApi) {
       try {
         let sent = false
-        if (hasGreenApi) {
+        if (hasMeta) {
+          sent = await sendViaMetaCloud(targetFormatted, msg)
+        } else if (hasTwilio) {
+          sent = await sendViaTwilio(targetFormatted, msg)
+        } else if (hasGreenApi) {
           sent = await sendViaGreenApi(targetFormatted, msg)
         } else if (hasUltraMsg) {
           sent = await sendViaUltraMsg(targetFormatted, msg)

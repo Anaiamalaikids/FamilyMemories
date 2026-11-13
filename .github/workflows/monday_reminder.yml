@@ -20,6 +20,11 @@ jobs:
 
       - name: Run Monday Reminder Script
         env:
+          META_WA_TOKEN: ${{ secrets.META_WA_TOKEN }}
+          META_WA_PHONE_ID: ${{ secrets.META_WA_PHONE_ID }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
           GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
           GREEN_API_TOKEN: ${{ secrets.GREEN_API_TOKEN }}
           ULTRAMSG_INSTANCE_ID: ${{ secrets.ULTRAMSG_INSTANCE_ID }}
