@@ -3789,6 +3789,66 @@ input:focus, select:focus, textarea:focus {
   border-color: #fff;
 }
 
+/* Database Keep-Alive Health Checker Styles */
+.admin-stat-card.active-db {
+  border-color: rgba(76, 175, 80, 0.45);
+  background: linear-gradient(145deg, rgba(20, 24, 33, 0.95), rgba(22, 38, 28, 0.55));
+}
+
+.live-pulse {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.live-pulse.green {
+  background: #4caf50;
+  box-shadow: 0 0 10px #4caf50;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(76, 175, 80, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}
+
+.stat-ping-btn {
+  background: rgba(76, 175, 80, 0.18);
+  border: 1px solid rgba(76, 175, 80, 0.45);
+  color: #a5d6a7;
+  padding: 0.22rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stat-ping-btn:hover:not(:disabled) {
+  background: rgba(76, 175, 80, 0.35);
+  border-color: #81c784;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.stat-ping-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
 
 
 

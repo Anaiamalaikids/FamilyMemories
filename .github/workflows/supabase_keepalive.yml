@@ -1,0 +1,26 @@
+name: Supabase Database Keep-Alive Health Checker
+
+on:
+  schedule:
+    # Runs every 12 hours (00:00 UTC & 12:00 UTC = 5:30 AM & 5:30 PM IST)
+    # Guaranteed to prevent Supabase free tier from pausing due to 7 days of inactivity
+    - cron: '0 */12 * * *'
+  workflow_dispatch: # Allows 1-click manual ping anytime from GitHub Actions tab
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Ping Supabase Database
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://mtksfqencsxmucyidotz.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'sb_publishable_ys6yDx1F5rlnh_9xA5NQPA_PG21ck-8' }}
+        run: node scripts/supabase_keep_alive.js

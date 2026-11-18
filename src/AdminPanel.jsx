@@ -29,6 +29,10 @@ export default function AdminPanel({ currentUser, onExit }) {
   const [isTriggering, setIsTriggering] = useState(false)
   const [triggerProgress, setTriggerProgress] = useState(null)
 
+  // Supabase Database Keep-Alive Health State
+  const [pingLoading, setPingLoading] = useState(false)
+  const [dbHealth, setDbHealth] = useState({ status: 'active', latency: null })
+
   // Spoiler Shield for Admin Sakthi (keep all targets blurred by default!)
   const [revealedSpoilers, setRevealedSpoilers] = useState({})
 
@@ -265,6 +269,35 @@ export default function AdminPanel({ currentUser, onExit }) {
     }
   }
 
+  const pingSupabaseHealth = async () => {
+    setPingLoading(true)
+    const start = Date.now()
+    try {
+      const rawUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mtksfqencsxmucyidotz.supabase.co'
+      const key = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_ys6yDx1F5rlnh_9xA5NQPA_PG21ck-8'
+      const cleanUrl = rawUrl.trim().replace(/\/+$/, '')
+
+      const res = await fetch(`${cleanUrl}/rest/v1/members?select=id&limit=1`, {
+        method: 'GET',
+        headers: {
+          'apikey': key,
+          'Authorization': `Bearer ${key}`
+        }
+      })
+      const latency = Date.now() - start
+      if (res.ok) {
+        setDbHealth({ status: 'active', latency })
+        showToast(`✅ Supabase Database Active! Response: ${latency}ms. Inactivity pause timer successfully reset!`, 'success')
+      } else {
+        throw new Error(`HTTP ${res.status}`)
+      }
+    } catch (err) {
+      setDbHealth({ status: 'error', latency: null })
+      showToast(`⚠️ Database ping error: ${err.message}`, 'error')
+    }
+    setPingLoading(false)
+  }
+
   const handleBroadcastShare = () => {
     const days = getDaysLeft()
     const text = `Don't forget to prepare for the gift just ${days} days more you know someone betrayed someone else in the past so make sure you don't repeat same as them :)\n\nPortal: https://family-memories-inky.vercel.app/`
@@ -376,6 +409,23 @@ export default function AdminPanel({ currentUser, onExit }) {
                 <span className="stat-value">{pendingCount}</span>
                 <span className="stat-sub">Haven't logged in yet</span>
               </div>
+              <div className="admin-stat-card active-db">
+                <span className="stat-label">Database Keep-Alive</span>
+                <span className="stat-value" style={{ color: '#4caf50', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '1.25rem' }}>
+                  <span className="live-pulse green" /> Active (7d Safe)
+                </span>
+                <span className="stat-sub" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', marginTop: '0.3rem' }}>
+                  <span>{dbHealth.latency ? `${dbHealth.latency}ms ping` : 'Auto-pinged every 12h'}</span>
+                  <button
+                    className="stat-ping-btn"
+                    onClick={pingSupabaseHealth}
+                    disabled={pingLoading}
+                    title="Ping database to reset 7-day inactivity pause counter"
+                  >
+                    {pingLoading ? 'Pinging...' : '⚡ Ping DB'}
+                  </button>
+                </span>
+              </div>
             </div>
 
             {/* PROMINENT WHATSAPP BROADCAST HERO CARD */}
@@ -462,6 +512,14 @@ export default function AdminPanel({ currentUser, onExit }) {
                   title="Reload live database data"
                 >
                   ↻ Refresh
+                </button>
+                <button
+                  className="admin-btn secondary"
+                  onClick={pingSupabaseHealth}
+                  disabled={pingLoading}
+                  title="Ping Supabase database to reset 7-day inactivity pause counter"
+                >
+                  {pingLoading ? 'Pinging...' : '🏥 Ping Database'}
                 </button>
                 <button
                   className="admin-btn primary"

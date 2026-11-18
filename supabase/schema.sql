@@ -210,3 +210,16 @@ insert into members (name, phone, password_hash, photo_url) values
   ('Sarath Vikram', '7010043287', crypt('sree anna', gen_salt('bf')), '/elves/sarath.jpg'),
   ('Srenithi', '9080369229', crypt('srenithiscrunchies', gen_salt('bf')), '/elves/srenithi.jpg'),
   ('Sakthi', '9344626769', crypt('adminlogin', gen_salt('bf')), '/elves/sakthi.jpg');
+
+-- 7. Automated Keep-Alive Health Checker Function
+-- Executes every 12-24h to keep PostgreSQL engine active and prevent 7-day inactivity pause
+create or replace function supabase_ping()
+returns json language sql security definer set search_path = public as $$
+  select json_build_object(
+    'status', 'healthy',
+    'timestamp', now(),
+    'message', 'Supabase database is active and awake'
+  );
+$$;
+grant execute on function supabase_ping() to anon;
+
